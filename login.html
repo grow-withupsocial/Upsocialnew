@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - UpSocial</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1b5c2c 0%, #2d9a5f 50%, #3CB371 100%); min-height: 100vh; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
+        
+        /* Wave Divider */
+        .wave-divider { position: absolute; bottom: 200px; left: 0; right: 0; height: 80px; background: linear-gradient(90deg, #fbbf24 0%, #fcd34d 100%); clip-path: polygon(0 40%, 0% 60%, 5% 58%, 10% 62%, 15% 58%, 20% 62%, 25% 58%, 30% 62%, 35% 58%, 40% 62%, 45% 58%, 50% 62%, 55% 58%, 60% 62%, 65% 58%, 70% 62%, 75% 58%, 80% 62%, 85% 58%, 90% 62%, 95% 58%, 100% 62%, 100% 100%, 0 100%); }
+        
+        .logo { font-size: 20px; font-weight: 700; color: white; padding: 20px; text-align: center; }
+        .logo .highlight { color: #fbbf24; }
+        
+        /* Auth Container */
+        .auth-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; z-index: 10; }
+        
+        .auth-card { background: white; border-radius: 12px; padding: 40px; max-width: 450px; width: 100%; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2); }
+        
+        .auth-header { text-align: center; margin-bottom: 30px; }
+        .auth-header .icon { width: 50px; height: 50px; background: #3CB371; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; margin: 0 auto 15px; }
+        .auth-header h1 { font-size: 24px; margin-bottom: 5px; font-weight: 700; }
+        
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; color: #1a1a1a; }
+        input { width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 14px; transition: 0.3s; background: #f9fafb; }
+        input:focus { outline: none; border-color: #3CB371; background: white; box-shadow: 0 0 0 3px rgba(60, 179, 113, 0.1); }
+        
+        .remember-forgot { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-size: 13px; }
+        .remember-forgot input { width: auto; margin-right: 5px; }
+        .remember-forgot a { color: #3CB371; text-decoration: none; }
+        .remember-forgot a:hover { text-decoration: underline; }
+        
+        .btn { padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; width: 100%; transition: 0.3s; }
+        .btn-primary { background: #3CB371; color: white; }
+        .btn-primary:hover { background: #2d9a5f; }
+        
+        .divider { margin: 20px 0; position: relative; text-align: center; }
+        .divider-line { height: 1px; background: #e5e7eb; }
+        .divider-text { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); background: white; padding: 0 10px; color: #999; font-size: 12px; font-weight: 600; }
+        
+        .social-btn { width: 100%; padding: 12px; border: 1px solid #e5e7eb; border-radius: 6px; background: white; cursor: pointer; font-weight: 600; font-size: 14px; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .social-btn:hover { border-color: #3CB371; background: #f9fafb; }
+        
+        .auth-footer { text-align: center; margin-top: 20px; font-size: 13px; }
+        .auth-footer a { color: #3CB371; text-decoration: none; font-weight: 600; margin: 0 5px; }
+        .auth-footer a:hover { text-decoration: underline; }
+        
+        @media (max-width: 768px) {
+            .auth-card { padding: 30px 20px; }
+            .auth-header h1 { font-size: 20px; }
+            .wave-divider { bottom: 150px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Wave Divider -->
+    <div class="wave-divider"></div>
+
+    <!-- Logo -->
+    <div class="logo">
+        <div id="logoContainer">Up<span class="highlight">Social</span></div>
+    </div>
+
+    <!-- Auth Container -->
+    <div class="auth-wrapper">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="icon" id="cardIcon">⭐</div>
+                <h1>Sign in</h1>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" id="username" placeholder="Username" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" id="password" placeholder="Password" required>
+                </div>
+
+                <div class="remember-forgot">
+                    <label>
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="#">Forgot Password</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary">LOGIN</button>
+            </form>
+
+            <div class="divider">
+                <div class="divider-line"></div>
+                <span class="divider-text">or signin with</span>
+            </div>
+
+            <button class="social-btn" onclick="alert('Google login coming soon!')">
+                <span>🔵</span> Continue with Google
+            </button>
+
+            <div class="auth-footer">
+                <a href="signup.html">Sign Up</a> / <a href="#">Forgot Password</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadLogo() {
+            const savedHeaderLogo = localStorage.getItem('upsocial_headerLogo');
+            const savedIconLogo = localStorage.getItem('upsocial_iconLogo');
+            
+            // Load header logo
+            if (savedHeaderLogo) {
+                document.getElementById('logoContainer').innerHTML = '<img src="' + savedHeaderLogo + '" alt="UpSocial" style="height: 40px; width: auto;">';
+            }
+            
+            // Load card icon logo
+            if (savedIconLogo) {
+                document.getElementById('cardIcon').innerHTML = '<img src="' + savedIconLogo + '" alt="Icon" style="height: 50px; width: auto;">';
+            }
+        }
+
+        loadLogo();
+
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const storedUser = localStorage.getItem('upsocial_user');
+            
+            if (!storedUser) {
+                alert('No account found. Please sign up first!');
+                setTimeout(() => {
+                    window.location.href = 'signup.html';
+                }, 500);
+                return;
+            }
+
+            const user = JSON.parse(storedUser);
+
+            // Check if login is with username or email
+            const usernameMatch = user.username === username;
+            const emailMatch = user.email === username;
+            const passwordMatch = user.password === password;
+
+            if ((usernameMatch || emailMatch) && passwordMatch) {
+                // Login successful
+                localStorage.setItem('upsocial_loggedIn', 'true');
+                localStorage.setItem('upsocial_currentUser', user.email);
+
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'Dashboard.html';
+                }, 500);
+            } else {
+                alert('Invalid username/email or password!');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - UpSocial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #0a0e27;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e8eef7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #0a0e27;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            border-radius: 8px;
+        }
+
+        .menu-toggle:hover {
+            background: #f5f7fa;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a0e27;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .admin-info {
+            text-align: right;
+        }
+
+        .admin-name {
+            font-weight: 600;
+            color: #0a0e27;
+            font-size: 13px;
+        }
+
+        .admin-role {
+            color: #8892a8;
+            font-size: 11px;
+        }
+
+        .admin-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(60, 179, 113, 0.2);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: white;
+            border-right: 1px solid #e8eef7;
+            overflow-y: auto;
+            padding: 20px 0;
+            z-index: 99;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-close {
+            display: none;
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #c5cad4;
+        }
+
+        .sidebar-close:hover {
+            color: #0a0e27;
+        }
+
+        .nav-section-title {
+            padding: 12px 16px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #8892a8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 12px;
+        }
+
+        .nav-item {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #8892a8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f5f7fa;
+            color: #3CB371;
+        }
+
+        .nav-item.active {
+            background: rgba(60, 179, 113, 0.08);
+            color: #3CB371;
+            border-right: 3px solid #3CB371;
+            padding-right: 13px;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 14, 39, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            z-index: 98;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px;
+            width: 100%;
+        }
+
+        /* Page Title */
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 28px;
+        }
+
+        /* Stat Cards Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e8eef7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #8892a8;
+            font-weight: 500;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #e8eef7;
+            padding-bottom: 0;
+        }
+
+        .tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #8892a8;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .tab-btn.active {
+            color: #3CB371;
+            border-bottom-color: #3CB371;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Search & Filter */
+        .search-filter {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid #e8eef7;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Outfit', sans-serif;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3CB371;
+            box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08);
+        }
+
+        /* Table */
+        .table-wrapper {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e8eef7;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: #f5f7fa;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #0a0e27;
+            border-bottom: 1px solid #e8eef7;
+            letter-spacing: 0.2px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #f0f2f5;
+            color: #0a0e27;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-processing { background: #dbeafe; color: #0c2340; }
+        .status-completed { background: #d1fae5; color: #065f46; }
+        .status-failed { background: #fee2e2; color: #991b1b; }
+        .status-inactive { background: #f3f4f6; color: #4b5563; }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .btn-edit {
+            background: rgba(60, 179, 113, 0.1);
+            color: #3CB371;
+        }
+
+        .btn-edit:hover {
+            background: rgba(60, 179, 113, 0.2);
+        }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-delete:hover {
+            background: #fca5a5;
+        }
+
+        .btn-view {
+            background: #dbeafe;
+            color: #0c2340;
+        }
+
+        .btn-view:hover {
+            background: #bfdbfe;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0a0e27;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e8eef7;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Outfit', sans-serif;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3CB371;
+            box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(60, 179, 113, 0.2);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(60, 179, 113, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f5f7fa;
+            color: #0a0e27;
+            border: 1px solid #e8eef7;
+        }
+
+        .btn-secondary:hover {
+            background: #e8eef7;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a0e27;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #c5cad4;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: #0a0e27;
+        }
+
+        /* Messages */
+        .message {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            display: none;
+            font-size: 13px;
+            font-weight: 500;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .message.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        /* Settings Cards */
+        .settings-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid #e8eef7;
+        }
+
+        .settings-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-row { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 16px; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .search-filter { flex-direction: column; }
+            .sidebar-close { display: block; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <button class="menu-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <h1 class="header-title">🔧 Admin Dashboard</h1>
+        </div>
+        <div class="header-right">
+            <div class="admin-info">
+                <div class="admin-name" id="adminName">Admin</div>
+                <div class="admin-role">Administrator</div>
+            </div>
+            <div class="admin-avatar" id="adminAvatar">A</div>
+        </div>
+    </div>
+
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" onclick="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="nav-section-title">📊 Dashboard</div>
+        <a class="nav-item active" onclick="switchPage('overview')">
+            <i class="fas fa-chart-line"></i>
+            <span>Overview</span>
+        </a>
+
+        <div class="nav-section-title">👥 Management</div>
+        <a class="nav-item" onclick="switchPage('users')">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('orders')">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Orders</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('payments')">
+            <i class="fas fa-credit-card"></i>
+            <span>Payments</span>
+        </a>
+
+        <div class="nav-section-title">⚙️ Configuration</div>
+        <a class="nav-item" onclick="switchPage('providers')">
+            <i class="fas fa-plug"></i>
+            <span>Service Providers</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('payment-gateways')">
+            <i class="fas fa-coins"></i>
+            <span>Payment Gateways</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('branding')">
+            <i class="fas fa-palette"></i>
+            <span>Branding</span>
+        </a>
+        <a class="nav-item" onclick="switchPage('settings')">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+
+        <div class="nav-section-title">🔗 Tools</div>
+        <a class="nav-item" onclick="window.location.href='dashboard.html'">
+            <i class="fas fa-arrow-left"></i>
+            <span>Back to App</span>
+        </a>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Overview Page -->
+            <div class="tab-content active" id="overview-page">
+                <div class="page-title">Dashboard Overview</div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-value" id="totalRevenue">₦0</div>
+                        <div class="stat-label">Total Revenue</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="completedOrders">0</div>
+                        <div class="stat-label">Completed Orders</div>
+                    </div>
+                </div>
+
+                <div style="background: white; border-radius: 12px; padding: 24px; border: 1px solid #e8eef7;">
+                    <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px; color: #0a0e27;">Quick Stats</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #8892a8; margin-bottom: 4px;">Pending Orders</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #0a0e27;" id="pendingOrders">0</div>
+                        </div>
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #8892a8; margin-bottom: 4px;">Processing Orders</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #0a0e27;" id="processingOrders">0</div>
+                        </div>
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #8892a8; margin-bottom: 4px;">Active Users</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #0a0e27;" id="activeUsers">0</div>
+                        </div>
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="font-size: 12px; color: #8892a8; margin-bottom: 4px;">Average Order Value</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #0a0e27;" id="avgOrderValue">₦0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Page -->
+            <div class="tab-content" id="users-page">
+                <div class="page-title">Users Management</div>
+                
+                <div id="usersMessage" class="message"></div>
+                
+                <div class="search-filter">
+                    <input type="text" class="search-input" id="userSearch" placeholder="Search by name, email, username, phone...">
+                    <button class="btn btn-primary" onclick="exportUsersData()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>Country</th>
+                                    <th>Join Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTable">
+                                <tr><td colspan="7" style="text-align: center; padding: 40px;">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Page -->
+            <div class="tab-content" id="orders-page">
+                <div class="page-title">Orders Management</div>
+                
+                <div id="ordersMessage" class="message"></div>
+                
+                <div class="search-filter">
+                    <input type="text" class="search-input" id="orderSearch" placeholder="Search by order ID, username, service...">
+                    <button class="btn btn-primary" onclick="exportOrdersData()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Username</th>
+                                    <th>Service</th>
+                                    <th>Platform</th>
+                                    <th>Qty</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTable">
+                                <tr><td colspan="9" style="text-align: center; padding: 40px;">Loading orders...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Page -->
+            <div class="tab-content" id="payments-page">
+                <div class="page-title">Payments Management</div>
+                
+                <div id="paymentsMessage" class="message"></div>
+                
+                <div class="search-filter">
+                    <input type="text" class="search-input" id="paymentSearch" placeholder="Search by username or email...">
+                    <button class="btn btn-primary" onclick="exportPaymentsData()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+
+                <div class="table-wrapper">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Balance</th>
+                                    <th>Deposits</th>
+                                    <th>Spent</th>
+                                    <th>Last Deposit</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentsTable">
+                                <tr><td colspan="7" style="text-align: center; padding: 40px;">Loading payments...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Providers Page -->
+            <div class="tab-content" id="providers-page">
+                <div class="page-title">Service Providers</div>
+                
+                <div id="providersMessage" class="message"></div>
+                
+                <button class="btn btn-primary" onclick="openAddProviderModal()" style="margin-bottom: 20px;">
+                    <i class="fas fa-plus"></i> Add Provider
+                </button>
+
+                <div class="table-wrapper">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Provider Name</th>
+                                    <th>API URL</th>
+                                    <th>Auth Method</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="providersTable">
+                                <tr><td colspan="5" style="text-align: center; padding: 40px;">Loading providers...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Gateways Page -->
+            <div class="tab-content" id="payment-gateways-page">
+                <div class="page-title">Payment Gateways</div>
+                
+                <div id="gatewayMessage" class="message"></div>
+
+                <div class="settings-card">
+                    <div class="settings-title">
+                        <i class="fas fa-credit-card"></i> Gateway Configuration
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Active Gateway</label>
+                        <select class="form-input" id="activeGateway">
+                            <option value="korapay">Korapay</option>
+                            <option value="paystack">Paystack</option>
+                            <option value="flutterwave">Flutterwave</option>
+                        </select>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">API Public Key</label>
+                            <input type="text" class="form-input" id="gatewayPublicKey" placeholder="pk_test_xxxxx">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">API Secret Key</label>
+                            <input type="password" class="form-input" id="gatewaySecretKey" placeholder="sk_test_xxxxx">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="savePaymentGateway()">
+                        <i class="fas fa-save"></i> Save Gateway
+                    </button>
+                </div>
+            </div>
+
+            <!-- Branding Page -->
+            <div class="tab-content" id="branding-page">
+                <div class="page-title">Site Branding</div>
+                
+                <div id="brandingMessage" class="message"></div>
+
+                <div class="settings-card">
+                    <div class="settings-title">
+                        <i class="fas fa-image"></i> Logo & Colors
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Site Name</label>
+                        <input type="text" class="form-input" id="siteName" placeholder="UpSocial">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Site Tagline</label>
+                        <input type="text" class="form-input" id="siteTagline" placeholder="Nigeria's social media solution">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Primary Color</label>
+                            <input type="color" class="form-input" id="primaryColor" value="#3CB371">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Secondary Color</label>
+                            <input type="color" class="form-input" id="secondaryColor" value="#2d9a5f">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="saveBranding()">
+                        <i class="fas fa-save"></i> Save Branding
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="tab-content" id="settings-page">
+                <div class="page-title">Settings</div>
+                
+                <div id="settingsMessage" class="message"></div>
+
+                <div class="settings-card">
+                    <div class="settings-title">
+                        <i class="fas fa-lock"></i> Security & Maintenance
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <button class="btn btn-secondary" onclick="clearCache()">
+                            <i class="fas fa-trash"></i> Clear Cache
+                        </button>
+                        <button class="btn btn-secondary" onclick="resetDatabase()">
+                            <i class="fas fa-refresh"></i> Reset Database
+                        </button>
+                        <button class="btn btn-secondary" onclick="backupData()">
+                            <i class="fas fa-download"></i> Backup Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-card">
+                    <div class="settings-title">
+                        <i class="fas fa-info-circle"></i> System Information
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; font-size: 13px;">
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="color: #8892a8; margin-bottom: 4px;">Version</div>
+                            <div style="color: #0a0e27; font-weight: 600;">v1.0.0</div>
+                        </div>
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="color: #8892a8; margin-bottom: 4px;">Environment</div>
+                            <div style="color: #0a0e27; font-weight: 600;">Production</div>
+                        </div>
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="color: #8892a8; margin-bottom: 4px;">Last Backup</div>
+                            <div style="color: #0a0e27; font-weight: 600;" id="lastBackup">Never</div>
+                        </div>
+                        <div style="padding: 12px; background: #f5f7fa; border-radius: 8px;">
+                            <div style="color: #8892a8; margin-bottom: 4px;">Database</div>
+                            <div style="color: #0a0e27; font-weight: 600;" id="dbSize">Calculating...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Balance Modal -->
+    <div class="modal" id="editBalanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Adjust User Balance</h3>
+                <button class="modal-close" onclick="closeModal('editBalanceModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Username</label>
+                <input type="text" class="form-input" id="editUsername" disabled>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Current Balance</label>
+                <input type="text" class="form-input" id="currentBalance" disabled>
+            </div>
+            <div class="form-group">
+                <label class="form-label">New Balance (₦)</label>
+                <input type="number" class="form-input" id="newBalance" placeholder="Enter new balance">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="btn btn-primary" onclick="saveBalance()">Save</button>
+                <button class="btn btn-secondary" onclick="closeModal('editBalanceModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Order Status Modal -->
+    <div class="modal" id="updateOrderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Order Status</h3>
+                <button class="modal-close" onclick="closeModal('updateOrderModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Order ID</label>
+                <input type="text" class="form-input" id="updateOrderId" disabled>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Current Status</label>
+                <input type="text" class="form-input" id="currentOrderStatus" disabled>
+            </div>
+            <div class="form-group">
+                <label class="form-label">New Status</label>
+                <select class="form-input" id="newOrderStatus">
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="btn btn-primary" onclick="saveOrderStatus()">Update</button>
+                <button class="btn btn-secondary" onclick="closeModal('updateOrderModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Provider Modal -->
+    <div class="modal" id="addProviderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Service Provider</h3>
+                <button class="modal-close" onclick="closeModal('addProviderModal')">×</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Provider Name</label>
+                <input type="text" class="form-input" id="providerName" placeholder="e.g., BovaSMM">
+            </div>
+            <div class="form-group">
+                <label class="form-label">API URL</label>
+                <input type="url" class="form-input" id="providerUrl" placeholder="https://api.example.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">API Key</label>
+                <input type="password" class="form-input" id="providerKey" placeholder="Enter API key">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Authentication Method</label>
+                <select class="form-input" id="authMethod">
+                    <option value="query">Query Parameter</option>
+                    <option value="header">Bearer Token Header</option>
+                    <option value="header-key">X-API-Key Header</option>
+                </select>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="btn btn-primary" onclick="addProvider()">Add</button>
+                <button class="btn btn-secondary" onclick="closeModal('addProviderModal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editingUserEmail = null;
+        let editingOrderId = null;
+        let editingOrderEmail = null;
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
+        }
+
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+
+        window.addEventListener('load', function() {
+            loadAdminDashboard();
+        });
+
+        function loadAdminDashboard() {
+            loadAdminInfo();
+            loadOverviewStats();
+        }
+
+        function loadAdminInfo() {
+            const adminUser = JSON.parse(localStorage.getItem('upsocial_user') || '{}');
+            const adminName = adminUser.username || 'Admin';
+            const initial = adminName[0].toUpperCase();
+            
+            document.getElementById('adminName').textContent = adminName;
+            document.getElementById('adminAvatar').textContent = initial;
+        }
+
+        function switchPage(page) {
+            closeSidebar();
+            
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(page + '-page').classList.add('active');
+
+            if (page === 'users') loadUsers();
+            else if (page === 'orders') loadOrders();
+            else if (page === 'payments') loadPayments();
+            else if (page === 'providers') loadProviders();
+            else if (page === 'payment-gateways') loadPaymentGateways();
+            else if (page === 'branding') loadBrandingSettings();
+            else if (page === 'settings') loadSystemSettings();
+        }
+
+        function loadOverviewStats() {
+            let totalUsers = 0;
+            let totalOrders = 0;
+            let totalRevenue = 0;
+            let completedOrders = 0;
+            let pendingOrders = 0;
+            let processingOrders = 0;
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userOrders_', '');
+                
+                if (email && key.startsWith('upsocial_userOrders_')) {
+                    totalUsers++;
+                    
+                    const orders = JSON.parse(localStorage.getItem(key) || '[]');
+                    totalOrders += orders.length;
+                    
+                    orders.forEach(order => {
+                        totalRevenue += order.price || 0;
+                        if (order.status === 'completed') completedOrders++;
+                        if (order.status === 'pending') pendingOrders++;
+                        if (order.status === 'processing') processingOrders++;
+                    });
+                }
+            }
+
+            const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
+
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('totalRevenue').textContent = '₦' + totalRevenue.toFixed(2);
+            document.getElementById('completedOrders').textContent = completedOrders;
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+            document.getElementById('processingOrders').textContent = processingOrders;
+            document.getElementById('activeUsers').textContent = totalUsers;
+            document.getElementById('avgOrderValue').textContent = '₦' + avgOrderValue.toFixed(2);
+        }
+
+        function loadUsers() {
+            const tbody = document.getElementById('usersTable');
+            const users = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userOrders_', '');
+                
+                if (email && key.startsWith('upsocial_userOrders_')) {
+                    const userStr = localStorage.getItem('upsocial_user');
+                    const userData = userStr && email === localStorage.getItem('upsocial_currentUser') 
+                        ? JSON.parse(userStr) 
+                        : { username: 'N/A', email: email };
+                    
+                    users.push({
+                        ...userData,
+                        email: email,
+                        joinDate: userData.joinDate || new Date().toLocaleDateString()
+                    });
+                }
+            }
+
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No users found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td><strong>${user.username || 'N/A'}</strong></td>
+                    <td>${user.email}</td>
+                    <td>${user.phone || 'N/A'}</td>
+                    <td>${user.country || 'N/A'}</td>
+                    <td>${user.joinDate}</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-view" onclick="viewUserDetails('${user.email}')">View</button>
+                            <button class="action-btn btn-delete" onclick="deleteUser('${user.email}')">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadOrders() {
+            const tbody = document.getElementById('ordersTable');
+            const allOrders = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userOrders_', '');
+                
+                if (email && key.startsWith('upsocial_userOrders_')) {
+                    const orders = JSON.parse(localStorage.getItem(key) || '[]');
+                    const userData = JSON.parse(localStorage.getItem('upsocial_user') || '{}');
+                    
+                    orders.forEach(order => {
+                        allOrders.push({
+                            ...order,
+                            username: userData.username || 'N/A',
+                            email: email
+                        });
+                    });
+                }
+            }
+
+            if (allOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No orders found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = allOrders.map(order => `
+                <tr>
+                    <td><strong>${order.id || 'N/A'}</strong></td>
+                    <td>${order.username}</td>
+                    <td>${order.service || 'N/A'}</td>
+                    <td>${order.platform || 'N/A'}</td>
+                    <td>${order.quantity || 0}</td>
+                    <td>₦${(order.price || 0).toFixed(2)}</td>
+                    <td><span class="status-badge status-${order.status || 'pending'}">${(order.status || 'pending').charAt(0).toUpperCase() + (order.status || 'pending').slice(1)}</span></td>
+                    <td>${order.date || 'N/A'}</td>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="openUpdateOrderModal('${order.id}', '${order.status}', '${order.email}')">Update</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadPayments() {
+            const tbody = document.getElementById('paymentsTable');
+            const payments = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userWallet_', '');
+                
+                if (email && key.startsWith('upsocial_userWallet_')) {
+                    const wallet = JSON.parse(localStorage.getItem(key) || '{"balance":0,"transactions":[]}');
+                    const orders = JSON.parse(localStorage.getItem('upsocial_userOrders_' + email) || '[]');
+                    const userData = JSON.parse(localStorage.getItem('upsocial_user') || '{}');
+                    const spent = orders.reduce((sum, o) => sum + (o.price || 0), 0);
+                    const deposits = (wallet.transactions || []).reduce((sum, t) => sum + (t.amount || 0), 0);
+                    const lastDeposit = wallet.transactions && wallet.transactions.length > 0 
+                        ? wallet.transactions[wallet.transactions.length - 1].date 
+                        : 'Never';
+                    
+                    payments.push({
+                        username: userData.username || 'N/A',
+                        email: email,
+                        balance: wallet.balance || 0,
+                        deposits: deposits,
+                        spent: spent,
+                        lastDeposit: lastDeposit
+                    });
+                }
+            }
+
+            if (payments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No payment records found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = payments.map(payment => `
+                <tr>
+                    <td><strong>${payment.username}</strong></td>
+                    <td>${payment.email}</td>
+                    <td>₦${payment.balance.toFixed(2)}</td>
+                    <td>₦${payment.deposits.toFixed(2)}</td>
+                    <td>₦${payment.spent.toFixed(2)}</td>
+                    <td>${payment.lastDeposit}</td>
+                    <td>
+                        <button class="action-btn btn-edit" onclick="openEditBalanceModal('${payment.email}', '${payment.username}', ${payment.balance})">Adjust</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadProviders() {
+            const tbody = document.getElementById('providersTable');
+            const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
+            
+            if (providers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 40px;">No providers configured</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = providers.map((p, idx) => `
+                <tr>
+                    <td><strong>${p.name}</strong></td>
+                    <td><small>${p.url}</small></td>
+                    <td><span class="status-badge" style="background: #f3f4f6; color: #4b5563;">${p.authMethod || 'query'}</span></td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td>
+                        <button class="action-btn btn-delete" onclick="removeProvider(${idx})">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function loadPaymentGateways() {
+            const activeGateway = localStorage.getItem('upsocial_paymentGateway') || 'korapay';
+            const publicKey = localStorage.getItem('upsocial_gatewayKey') || '';
+            const secretKey = localStorage.getItem('upsocial_gatewaySecret') || '';
+
+            document.getElementById('activeGateway').value = activeGateway;
+            document.getElementById('gatewayPublicKey').value = publicKey;
+            document.getElementById('gatewaySecretKey').value = secretKey;
+        }
+
+        function loadBrandingSettings() {
+            const siteName = localStorage.getItem('upsocial_siteName') || 'UpSocial';
+            const siteTagline = localStorage.getItem('upsocial_siteTagline') || "Nigeria's social media solution";
+            const primaryColor = localStorage.getItem('upsocial_primaryColor') || '#3CB371';
+            const secondaryColor = localStorage.getItem('upsocial_secondaryColor') || '#2d9a5f';
+
+            document.getElementById('siteName').value = siteName;
+            document.getElementById('siteTagline').value = siteTagline;
+            document.getElementById('primaryColor').value = primaryColor;
+            document.getElementById('secondaryColor').value = secondaryColor;
+        }
+
+        function loadSystemSettings() {
+            const lastBackup = localStorage.getItem('upsocial_lastBackup') || 'Never';
+            document.getElementById('lastBackup').textContent = lastBackup;
+            
+            let dbSize = 0;
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+                dbSize += (key.length + value.length) * 2;
+            }
+            
+            const sizeInMB = (dbSize / 1024 / 1024).toFixed(2);
+            document.getElementById('dbSize').textContent = sizeInMB + ' MB';
+        }
+
+        function openEditBalanceModal(email, username, balance) {
+            editingUserEmail = email;
+            document.getElementById('editUsername').value = username;
+            document.getElementById('currentBalance').value = '₦' + balance.toFixed(2);
+            document.getElementById('newBalance').value = '';
+            document.getElementById('editBalanceModal').classList.add('active');
+        }
+
+        function saveBalance() {
+            const newBalance = parseFloat(document.getElementById('newBalance').value);
+            
+            if (isNaN(newBalance) || newBalance < 0) {
+                showMessage('paymentsMessage', '❌ Please enter a valid amount', 'error');
+                return;
+            }
+
+            const wallet = JSON.parse(localStorage.getItem('upsocial_userWallet_' + editingUserEmail) || '{"balance":0,"transactions":[]}');
+            wallet.balance = newBalance;
+            localStorage.setItem('upsocial_userWallet_' + editingUserEmail, JSON.stringify(wallet));
+
+            closeModal('editBalanceModal');
+            showMessage('paymentsMessage', '✅ Balance updated!', 'success');
+            loadPayments();
+        }
+
+        function openUpdateOrderModal(orderId, currentStatus, email) {
+            editingOrderId = orderId;
+            editingOrderEmail = email;
+            document.getElementById('updateOrderId').value = orderId;
+            document.getElementById('currentOrderStatus').value = currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1);
+            document.getElementById('newOrderStatus').value = currentStatus;
+            document.getElementById('updateOrderModal').classList.add('active');
+        }
+
+        function saveOrderStatus() {
+            const newStatus = document.getElementById('newOrderStatus').value;
+            const orders = JSON.parse(localStorage.getItem('upsocial_userOrders_' + editingOrderEmail) || '[]');
+            const order = orders.find(o => o.id === editingOrderId);
+            
+            if (order) {
+                order.status = newStatus;
+                localStorage.setItem('upsocial_userOrders_' + editingOrderEmail, JSON.stringify(orders));
+                closeModal('updateOrderModal');
+                showMessage('ordersMessage', '✅ Order status updated!', 'success');
+                loadOrders();
+            }
+        }
+
+        function openAddProviderModal() {
+            document.getElementById('providerName').value = '';
+            document.getElementById('providerUrl').value = '';
+            document.getElementById('providerKey').value = '';
+            document.getElementById('addProviderModal').classList.add('active');
+        }
+
+        function addProvider() {
+            const name = document.getElementById('providerName').value.trim();
+            const url = document.getElementById('providerUrl').value.trim();
+            const key = document.getElementById('providerKey').value.trim();
+            const authMethod = document.getElementById('authMethod').value;
+
+            if (!name || !url || !key) {
+                showMessage('providersMessage', '❌ Please fill all fields', 'error');
+                return;
+            }
+
+            const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
+            providers.push({ name, url, key, authMethod });
+            localStorage.setItem('upsocial_serviceProviders', JSON.stringify(providers));
+
+            closeModal('addProviderModal');
+            loadProviders();
+            showMessage('providersMessage', '✅ Provider added!', 'success');
+        }
+
+        function removeProvider(index) {
+            if (confirm('Remove this provider?')) {
+                const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
+                providers.splice(index, 1);
+                localStorage.setItem('upsocial_serviceProviders', JSON.stringify(providers));
+                loadProviders();
+            }
+        }
+
+        function saveBranding() {
+            localStorage.setItem('upsocial_siteName', document.getElementById('siteName').value);
+            localStorage.setItem('upsocial_siteTagline', document.getElementById('siteTagline').value);
+            localStorage.setItem('upsocial_primaryColor', document.getElementById('primaryColor').value);
+            localStorage.setItem('upsocial_secondaryColor', document.getElementById('secondaryColor').value);
+            showMessage('brandingMessage', '✅ Branding updated!', 'success');
+        }
+
+        function savePaymentGateway() {
+            const publicKey = document.getElementById('gatewayPublicKey').value.trim();
+            const secretKey = document.getElementById('gatewaySecretKey').value.trim();
+
+            if (!publicKey || !secretKey) {
+                showMessage('gatewayMessage', '❌ Please fill all fields', 'error');
+                return;
+            }
+
+            localStorage.setItem('upsocial_paymentGateway', document.getElementById('activeGateway').value);
+            localStorage.setItem('upsocial_gatewayKey', publicKey);
+            localStorage.setItem('upsocial_gatewaySecret', secretKey);
+            showMessage('gatewayMessage', '✅ Gateway updated!', 'success');
+        }
+
+        function clearCache() {
+            if (confirm('Clear cache?')) {
+                localStorage.removeItem('upsocial_services_cache');
+                localStorage.removeItem('upsocial_cache_time');
+                showMessage('settingsMessage', '✅ Cache cleared!', 'success');
+            }
+        }
+
+        function resetDatabase() {
+            if (confirm('⚠️ WARNING: Delete ALL data?')) {
+                if (confirm('This cannot be undone. Type RESET to confirm.')) {
+                    const confirmation = prompt('Type RESET:');
+                    if (confirmation === 'RESET') {
+                        for (let i = localStorage.length - 1; i >= 0; i--) {
+                            const key = localStorage.key(i);
+                            if (key.startsWith('upsocial_')) {
+                                localStorage.removeItem(key);
+                            }
+                        }
+                        showMessage('settingsMessage', '✅ Database reset!', 'success');
+                        setTimeout(() => window.location.reload(), 2000);
+                    }
+                }
+            }
+        }
+
+        function backupData() {
+            const backup = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key.startsWith('upsocial_')) {
+                    backup[key] = localStorage.getItem(key);
+                }
+            }
+
+            const dataStr = JSON.stringify(backup, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'backup-' + new Date().getTime() + '.json';
+            link.click();
+
+            localStorage.setItem('upsocial_lastBackup', new Date().toLocaleString());
+            showMessage('settingsMessage', '✅ Backup downloaded!', 'success');
+        }
+
+        function exportUsersData() {
+            const users = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userOrders_', '');
+                
+                if (email && key.startsWith('upsocial_userOrders_')) {
+                    const userStr = localStorage.getItem('upsocial_user');
+                    const userData = userStr && email === localStorage.getItem('upsocial_currentUser') 
+                        ? JSON.parse(userStr) 
+                        : { username: 'N/A', email: email };
+                    users.push(userData);
+                }
+            }
+
+            downloadCSV(users, 'users');
+        }
+
+        function exportOrdersData() {
+            const orders = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userOrders_', '');
+                
+                if (email && key.startsWith('upsocial_userOrders_')) {
+                    const userOrders = JSON.parse(localStorage.getItem(key) || '[]');
+                    orders.push(...userOrders);
+                }
+            }
+
+            downloadCSV(orders, 'orders');
+        }
+
+        function exportPaymentsData() {
+            const payments = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const email = key.replace('upsocial_userWallet_', '');
+                
+                if (email && key.startsWith('upsocial_userWallet_')) {
+                    const wallet = JSON.parse(localStorage.getItem(key) || '{"balance":0}');
+                    payments.push({
+                        email: email,
+                        balance: wallet.balance,
+                    });
+                }
+            }
+
+            downloadCSV(payments, 'payments');
+        }
+
+        function downloadCSV(data, filename) {
+            if (!Array.isArray(data) || data.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            const headers = Object.keys(data[0]);
+            let csv = headers.join(',') + '\n';
+            
+            data.forEach(row => {
+                const values = headers.map(header => {
+                    const value = row[header];
+                    return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+                });
+                csv += values.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename + '-' + new Date().getTime() + '.csv';
+            link.click();
+
+            showMessage('ordersMessage', '✅ Data exported!', 'success');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = 'message show ' + type;
+            
+            setTimeout(() => {
+                element.classList.remove('show');
+            }, 3000);
+        }
+
+        function viewUserDetails(email) {
+            alert('User: ' + email);
+        }
+
+        function deleteUser(email) {
+            if (confirm('Delete this user?')) {
+                localStorage.removeItem('upsocial_userWallet_' + email);
+                localStorage.removeItem('upsocial_userOrders_' + email);
+                loadUsers();
+                showMessage('usersMessage', '✅ User deleted!', 'success');
+            }
+        }
+    </script>
+</body>
+</html>

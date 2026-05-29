@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order - UpSocial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; }
+        body { 
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #ffffff; 
+            color: #0a0e27;
+            padding-bottom: 150px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #f0f2f5;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        
+        .header-back {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f5f7fa;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+        
+        .header-back:hover {
+            background: #e8eef7;
+        }
+        
+        .header-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a0e27;
+        }
+        
+        /* Main Content */
+        main { 
+            flex: 1;
+            padding: 16px;
+            max-width: 100%;
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f0f2f5;
+            border-top: 4px solid #3CB371;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: #8892a8;
+            letter-spacing: 0.3px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 8px;
+        }
+        
+        .empty-text {
+            font-size: 13px;
+            color: #8892a8;
+            letter-spacing: 0.3px;
+        }
+        
+        /* Service Grid */
+        .services-section {
+            margin-bottom: 28px;
+        }
+        
+        .services-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 16px;
+            letter-spacing: -0.4px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        
+        .service-card {
+            background: white;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1.5px solid #f0f2f5;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            color: #0a0e27;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-card:hover {
+            border-color: #3CB371;
+            box-shadow: 0 6px 20px rgba(60, 179, 113, 0.12);
+            transform: translateY(-4px);
+        }
+        
+        .service-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(60, 179, 113, 0.1) 0%, rgba(45, 154, 95, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #3CB371;
+        }
+        
+        .service-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+        
+        .service-platform {
+            font-size: 12px;
+            color: #8892a8;
+            margin-bottom: 10px;
+        }
+        
+        .service-price {
+            font-size: 14px;
+            font-weight: 700;
+            color: #3CB371;
+        }
+        
+        /* Order Form Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 14, 39, 0.6);
+            backdrop-filter: blur(4px);
+            align-items: flex-end;
+            z-index: 200;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 28px 20px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalSlideUp 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #0a0e27;
+            letter-spacing: -0.5px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #c5cad4;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: #0a0e27;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #0a0e27;
+            letter-spacing: 0.3px;
+        }
+        
+        .form-input {
+            width: 100%;
+            background: #f5f7fa;
+            border: 1.5px solid #e8eef7;
+            color: #0a0e27;
+            padding: 13px;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.2px;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #3CB371;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .price-info {
+            background: #f5f7fa;
+            border-radius: 10px;
+            padding: 14px;
+            margin: 16px 0;
+            border-left: 4px solid #3CB371;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        
+        .price-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px solid #e8eef7;
+            font-weight: 700;
+            color: #3CB371;
+        }
+        
+        .form-button {
+            width: 100%;
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 12px;
+            box-shadow: 0 4px 16px rgba(60, 179, 113, 0.2);
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.4px;
+        }
+        
+        .form-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 24px rgba(60, 179, 113, 0.3);
+        }
+        
+        .form-button:active {
+            transform: scale(0.98);
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        
+        /* Bottom Navigation */
+        .bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    height:78px;
+    background:#fff;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    border-top:1px solid #f1f1f1;
+    box-shadow:0 -8px 30px rgba(0,0,0,.05);
+    z-index:1000;
+}
+
+.nav-item{
+    text-decoration:none;
+    color:#9CA3AF;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:5px;
+    font-size:11px;
+    font-weight:500;
+    transition:.3s;
+}
+
+.nav-item i{
+    font-size:20px;
+}
+
+.nav-item.active{
+    color:#3CB371;
+}
+
+.nav-item.active i{
+    background:rgba(60,179,113,.12);
+    width:42px;
+    height:42px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.nav-item span{
+    font-size:11px;
+}
+        
+        @media (max-width: 600px) {
+            main { padding: 12px; }
+            .services-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <button class="header-back" onclick="goBack()">←</button>
+        <h1 class="header-title">New Order</h1>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="services-section">
+            <h2 class="services-title">Select a Service</h2>
+            <div id="contentArea">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Loading services...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <a href="Dashboard.html" class="nav-item">
+            <i class="fas fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="my-orders.html" class="nav-item">
+            <i class="fas fa-layer-group"></i>
+            <span>Orders</span>
+        </a>
+        <a href="new-order.html" class="nav-item active">
+            <i class="fas fa-bag-shopping"></i>
+            <span>New-Orders</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+
+    <!-- Order Form Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalTitle">Place Order</div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Service</label>
+                <input type="text" class="form-input" id="serviceName" readonly style="background: #f5f7fa; color: #8892a8;">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Platform</label>
+                <input type="text" class="form-input" id="platformName" readonly style="background: #f5f7fa; color: #8892a8;">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Target Username/Link *</label>
+                <input type="text" class="form-input" id="targetUsername" placeholder="@username or profile link">
+                <div class="error-message" id="targetError"></div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Quantity *</label>
+                    <input type="number" class="form-input" id="quantity" placeholder="Minimum: 10" min="10" value="100">
+                    <div class="error-message" id="quantityError"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price per unit</label>
+                    <input type="text" class="form-input" id="pricePerUnit" readonly style="background: #f5f7fa; color: #8892a8;">
+                </div>
+            </div>
+
+            <div class="price-info">
+                <div class="price-row">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">₦0.00</span>
+                </div>
+                <div class="price-row">
+                    <span style="font-weight: 600; color: #0a0e27;">Total Cost:</span>
+                    <span id="totalCost">₦0.00</span>
+                </div>
+            </div>
+
+            <button class="form-button" onclick="submitOrder()">Place Order</button>
+        </div>
+    </div>
+
+    <script>
+        let services = [];
+        let currentService = null;
+
+        // Initialize
+        window.addEventListener('load', function() {
+            checkLogin();
+            loadServices();
+        });
+
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('upsocial_loggedIn');
+            if (!isLoggedIn || isLoggedIn === 'false') {
+                window.location.href = 'login.html';
+                return;
+            }
+        }
+
+        function loadServices() {
+            // Try to load from cached services first
+            const cachedServices = localStorage.getItem('upsocial_services');
+            if (cachedServices) {
+                services = JSON.parse(cachedServices);
+                renderServices();
+                return;
+            }
+
+            // Get API settings
+            const apiSettings = localStorage.getItem('upsocial_apiSettings');
+            if (!apiSettings) {
+                showEmptyState('No API Configured', 'Go to Admin Settings to configure your SMM panel API');
+                return;
+            }
+
+            const settings = JSON.parse(apiSettings);
+            let apiUrl = settings.url;
+            const options = { method: 'GET' };
+
+            // Apply authentication based on method
+            if (settings.authMethod === 'query') {
+                apiUrl += (apiUrl.includes('?') ? '&' : '?') + 'api_key=' + encodeURIComponent(settings.key);
+            } else if (settings.authMethod === 'header') {
+                options.headers = {
+                    'Authorization': 'Bearer ' + settings.key,
+                    'Content-Type': 'application/json'
+                };
+            } else if (settings.authMethod === 'header-key') {
+                options.headers = {
+                    'X-API-Key': settings.key,
+                    'Content-Type': 'application/json'
+                };
+            }
+
+            fetch(apiUrl, options)
+                .then(response => response.json())
+                .then(data => {
+                    services = Array.isArray(data) ? data : data.services || data.data || [];
+                    
+                    // Cache services
+                    if (services.length > 0) {
+                        localStorage.setItem('upsocial_services', JSON.stringify(services));
+                    }
+                    
+                    renderServices();
+                })
+                .catch(error => {
+                    console.error('Error loading services:', error);
+                    showEmptyState('Failed to load services', 'Check your API configuration in Admin Settings');
+                });
+        }
+
+        function renderServices() {
+            const contentArea = document.getElementById('contentArea');
+            
+            if (!services || services.length === 0) {
+                showEmptyState('No Services Available', 'Connect your API to display services');
+                return;
+            }
+
+            const grid = document.createElement('div');
+            grid.className = 'services-grid';
+            
+            services.forEach((service, index) => {
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                card.onclick = () => openOrderForm(index);
+                card.innerHTML = `
+                    <div class="service-icon">${service.icon || '<i class="fas fa-star"></i>'}</div>
+                    <div class="service-name">${service.name || 'Unknown Service'}</div>
+                    <div class="service-platform">${service.platform || 'Platform'}</div>
+                    <div class="service-price">₦${parseFloat(service.price || 0).toFixed(2)}</div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            contentArea.innerHTML = '';
+            contentArea.appendChild(grid);
+        }
+
+        function showEmptyState(title, text) {
+            const contentArea = document.getElementById('contentArea');
+            contentArea.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📭</div>
+                    <div class="empty-title">${title}</div>
+                    <div class="empty-text">${text}</div>
+                </div>
+            `;
+        }
+
+        function openOrderForm(serviceIndex) {
+            currentService = services[serviceIndex];
+            if (!currentService) return;
+
+            document.getElementById('serviceName').value = currentService.name || '';
+            document.getElementById('platformName').value = currentService.platform || '';
+            document.getElementById('pricePerUnit').value = '₦' + parseFloat(currentService.price || 0).toFixed(2);
+            document.getElementById('quantity').value = '100';
+            document.getElementById('targetUsername').value = '';
+            document.getElementById('modalTitle').textContent = 'Order: ' + (currentService.name || 'Service');
+            
+            updatePriceInfo();
+            document.getElementById('orderModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.remove('active');
+            clearErrors();
+        }
+
+        function updatePriceInfo() {
+            const quantity = parseInt(document.getElementById('quantity').value) || 0;
+            const price = parseFloat(currentService.price || 0);
+            const subtotal = quantity * price;
+            document.getElementById('subtotal').textContent = '₦' + subtotal.toFixed(2);
+            document.getElementById('totalCost').textContent = '₦' + subtotal.toFixed(2);
+        }
+
+        document.getElementById('quantity').addEventListener('input', updatePriceInfo);
+
+        function clearErrors() {
+            document.getElementById('targetError').textContent = '';
+            document.getElementById('quantityError').textContent = '';
+        }
+
+        function submitOrder() {
+            clearErrors();
+            let hasError = false;
+
+            const target = document.getElementById('targetUsername').value.trim();
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (!target) {
+                document.getElementById('targetError').textContent = 'Please enter target username or link';
+                hasError = true;
+            }
+
+            if (!quantity || quantity < 10) {
+                document.getElementById('quantityError').textContent = 'Minimum quantity is 10';
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            const totalCost = quantity * parseFloat(currentService.price || 0);
+
+            // Check wallet balance
+            const userEmail = localStorage.getItem('upsocial_currentUser');
+            const walletData = localStorage.getItem('upsocial_userWallet_' + userEmail);
+            const wallet = walletData ? JSON.parse(walletData) : { balance: 0, transactions: [] };
+
+            if (wallet.balance < totalCost) {
+                alert('❌ Insufficient wallet balance!\n\nYou need ₦' + totalCost.toFixed(2) + ' but only have ₦' + wallet.balance.toFixed(2));
+                closeModal();
+                return;
+            }
+
+            // Create order
+            const orderId = 'ORD-' + Date.now();
+            const order = {
+                id: orderId,
+                serviceId: currentService.id || '',
+                service: currentService.name || '',
+                platform: currentService.platform || '',
+                target: target,
+                quantity: quantity,
+                price: totalCost,
+                status: 'pending',
+                date: new Date().toLocaleDateString(),
+                time: new Date().toLocaleTimeString()
+            };
+
+            // Get existing orders
+            const ordersData = localStorage.getItem('upsocial_userOrders_' + userEmail);
+            let orders = ordersData ? JSON.parse(ordersData) : [];
+            orders.push(order);
+
+            // Deduct from wallet
+            wallet.balance -= totalCost;
+            wallet.transactions = wallet.transactions || [];
+            wallet.transactions.push({
+                type: 'Order: ' + (currentService.name || ''),
+                amount: -totalCost,
+                date: new Date().toLocaleDateString(),
+                status: 'completed'
+            });
+
+            // Save to localStorage
+            localStorage.setItem('upsocial_userOrders_' + userEmail, JSON.stringify(orders));
+            localStorage.setItem('upsocial_userWallet_' + userEmail, JSON.stringify(wallet));
+
+            // Success message
+            alert('✅ Order Placed Successfully!\n\nOrder ID: ' + orderId + '\nService: ' + currentService.name + '\nQuantity: ' + quantity + '\nTotal: ₦' + totalCost.toFixed(2));
+            
+            closeModal();
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        // Close modal on outside click
+        document.getElementById('orderModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
