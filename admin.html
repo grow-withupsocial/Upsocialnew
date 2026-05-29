@@ -683,7 +683,7 @@
         </a>
 
         <div class="nav-section-title">🔗 Tools</div>
-        <a class="nav-item" onclick="window.location.href='Dashboard.html'">
+        <a class="nav-item" onclick="window.location.href='dashboard.html'">
             <i class="fas fa-arrow-left"></i>
             <span>Back to App</span>
         </a>
@@ -1343,7 +1343,10 @@
                     <td><span class="status-badge" style="background: #f3f4f6; color: #4b5563;">${p.authMethod || 'query'}</span></td>
                     <td><span class="status-badge status-active">Active</span></td>
                     <td>
-                        <button class="action-btn btn-delete" onclick="removeProvider(${idx})">Delete</button>
+                        <div class="action-buttons">
+                            <button class="action-btn btn-edit" onclick="importServicesFromProvider(${idx}, '${p.name}')">Import</button>
+                            <button class="action-btn btn-delete" onclick="removeProvider(${idx})">Delete</button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -1459,6 +1462,105 @@
             closeModal('addProviderModal');
             loadProviders();
             showMessage('providersMessage', '✅ Provider added!', 'success');
+        }
+
+        function importServicesFromProvider(index, providerName) {
+            const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
+            const provider = providers[index];
+
+            if (!provider) {
+                showMessage('providersMessage', '❌ Provider not found', 'error');
+                return;
+            }
+
+            // Show loading message
+            showMessage('providersMessage', '⏳ Importing services from ' + providerName + '...', 'success');
+
+            // Build the API request with proper authentication
+            let apiUrl = provider.url;
+            const authMethod = provider.authMethod || 'query';
+
+            // Add authentication based on method
+            if (authMethod === 'query') {
+                apiUrl += (apiUrl.includes('?') ? '&' : '?') + 'api_key=' + provider.key;
+            }
+
+            // Fetch services from provider
+            fetch(apiUrl, {
+                method: 'GET',
+                headers: authMethod === 'header' ? {
+                    'Authorization': 'Bearer ' + provider.key
+                } : authMethod === 'header-key' ? {
+                    'X-API-Key': provider.key
+                } : {}
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('API Error: ' + response.status);
+                return response.json();
+            })
+            .then(data => {
+                // Handle array response
+                let services = [];
+                if (Array.isArray(data)) {
+                    services = data;
+                } else if (data.services && Array.isArray(data.services)) {
+                    services = data.services;
+                } else if (data.data && Array.isArray(data.data)) {
+                    services = data.data;
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+                if (services.length === 0) {
+                    showMessage('providersMessage', '⚠️ No services found from provider', 'error');
+                    return;
+                }
+
+                // Format services for storage
+                const formattedServices = services.map((s, idx) => ({
+                    id: s.service || s.id || (idx + 1),
+                    name: s.name || s.service_name || 'Service ' + (idx + 1),
+                    platform: detectPlatform(s.name || s.category || ''),
+                    price: parseFloat(s.rate || s.price || 0),
+                    provider: providerName,
+                    category: s.category || s.type || 'General'
+                }));
+
+                // Save services
+                localStorage.setItem('upsocial_services', JSON.stringify(formattedServices));
+                localStorage.setItem('upsocial_services_cache', JSON.stringify(formattedServices));
+                localStorage.setItem('upsocial_cache_time', new Date().getTime().toString());
+
+                // Update provider with import info
+                provider.lastImport = new Date().toLocaleString();
+                provider.servicesCount = formattedServices.length;
+                providers[index] = provider;
+                localStorage.setItem('upsocial_serviceProviders', JSON.stringify(providers));
+
+                showMessage('providersMessage', '✅ Imported ' + formattedServices.length + ' services from ' + providerName, 'success');
+                loadProviders();
+            })
+            .catch(error => {
+                console.error('Import error:', error);
+                showMessage('providersMessage', '❌ Failed to import: ' + error.message, 'error');
+            });
+        }
+
+        function detectPlatform(name) {
+            const n = name.toLowerCase();
+            if (n.includes('instagram') || n.includes('ig')) return 'Instagram';
+            if (n.includes('tiktok') || n.includes('tt')) return 'TikTok';
+            if (n.includes('youtube') || n.includes('yt')) return 'YouTube';
+            if (n.includes('twitter') || n.includes('x') || n.includes('tweet')) return 'Twitter';
+            if (n.includes('facebook') || n.includes('fb')) return 'Facebook';
+            if (n.includes('telegram') || n.includes('tg')) return 'Telegram';
+            if (n.includes('spotify')) return 'Spotify';
+            if (n.includes('soundcloud')) return 'SoundCloud';
+            if (n.includes('linkedin')) return 'LinkedIn';
+            if (n.includes('twitch')) return 'Twitch';
+            if (n.includes('discord')) return 'Discord';
+            if (n.includes('thread')) return 'Threads';
+            return 'Social Media';
         }
 
         function removeProvider(index) {
