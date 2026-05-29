@@ -1,10 +1,8 @@
 const express = require('express');
 const { Pool } = require('pg');
 const cors = require('cors');
-// 👇 ADD THIS LINE (line 4)
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// 👆 END ADD
 require('dotenv').config();
 
 const app = express();
@@ -25,10 +23,9 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// AUTO-CREATE TABLE ON STARTUP
+// AUTO-CREATE TABLES ON STARTUP
 async function initDatabase() {
   try {
-    // Users table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
@@ -40,7 +37,6 @@ async function initDatabase() {
       );
     `);
 
-    // Orders table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
@@ -62,8 +58,7 @@ async function initDatabase() {
 
 initDatabase();
 
-// 👇 ADD THIS BLOCK HERE — after initDatabase(), before app.get('/api/health', ...)
-// ========== AUTH MIDDLEWARE ==========
+// AUTH MIDDLEWARE
 function authMiddleware(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'No token' });
@@ -75,7 +70,17 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// ========== AUTH ROUTES ==========
+// HEALTH CHECK
+app.get('/api/health', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT NOW()');
+    res.json({ status: 'OK', database: 'connected', time: result.rows[0] });
+  } catch (err) {
+    res.status(500).json({ status: 'ERROR', message: err.message });
+  }
+});
+
+// AUTH ROUTES
 app.post('/api/auth/signup', async (req, res) => {
   const { username, email, password } = req.body;
   const hash = await bcrypt.hash(password, 10);
@@ -103,7 +108,7 @@ app.post('/api/auth/login', async (req, res) => {
   res.json({ token, user: { id: user.id, username: user.username, email: user.email, balance: user.balance } });
 });
 
-// ========== ORDER ROUTES ==========
+// ORDER ROUTES
 app.get('/api/orders', authMiddleware, async (req, res) => {
   const result = await pool.query('SELECT * FROM orders WHERE user_id = $1 ORDER BY created_at DESC', [req.user.id]);
   res.json(result.rows);
@@ -119,7 +124,7 @@ app.post('/api/orders', authMiddleware, async (req, res) => {
   res.status(201).json(result.rows[0]);
 });
 
-// ========== WALLET ROUTES ==========
+// WALLET ROUTES
 app.get('/api/wallet', authMiddleware, async (req, res) => {
   const result = await pool.query('SELECT balance FROM users WHERE id = $1', [req.user.id]);
   res.json({ balance: result.rows[0].balance });
@@ -131,85 +136,8 @@ app.post('/api/wallet/add', authMiddleware, async (req, res) => {
   const result = await pool.query('SELECT balance FROM users WHERE id = $1', [req.user.id]);
   res.json({ balance: result.rows[0].balance });
 });
-// 👆 END OF BLOCK TO ADD
 
-// Test connection
-app.get('/api/health', async (req, res) => {
-  // ... rest stays the same
-
-
-// ... rest of your routes stay the same
-
-
-// Test connection
-app.get('/api/health', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT NOW()');
-    res.json({ status: 'OK', database: 'connected', time: result.rows[0] });
-  } catch (err) {
-    res.status(500).json({ status: 'ERROR', message: err.message });
-  }
-});
-
-// GET all items
-app.get('/api/items', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM items ORDER BY created_at DESC');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// GET single item
-app.get('/api/items/:id', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM items WHERE id = $1', [req.params.id]);
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' });
-    res.json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// CREATE item
-app.post('/api/items', async (req, res) => {
-  try {
-    const { title, description } = req.body;
-    const result = await pool.query(
-      'INSERT INTO items (title, description) VALUES ($1, $2) RETURNING *',
-      [title, description]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// UPDATE item
-app.put('/api/items/:id', async (req, res) => {
-  try {
-    const { title, description } = req.body;
-    await pool.query(
-      'UPDATE items SET title = $1, description = $2 WHERE id = $3',
-      [title, description, req.params.id]
-    );
-    res.json({ message: 'Updated' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// DELETE item
-app.delete('/api/items/:id', async (req, res) => {
-  try {
-    await pool.query('DELETE FROM items WHERE id = $1', [req.params.id]);
-    res.json({ message: 'Deleted' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
+// START SERVER
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
