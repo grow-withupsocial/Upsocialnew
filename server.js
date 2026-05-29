@@ -6,7 +6,6 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// CORS
 app.use(cors({
   origin: [
     'https://yourusername.github.io',
@@ -21,6 +20,28 @@ const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
+
+// AUTO-CREATE TABLE ON STARTUP
+async function initDatabase() {
+  try {
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS items (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✅ Database table ready');
+  } catch (err) {
+    console.error('❌ Database init error:', err.message);
+  }
+}
+
+initDatabase();
+
+// ... rest of your routes stay the same
+
 
 // Test connection
 app.get('/api/health', async (req, res) => {
