@@ -23,41 +23,74 @@ const pool = new Pool({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
 });
 
-// AUTO-CREATE TABLES ON STARTUP
+// AUTO-CREATE TABLES ON STARTUP (with proper ALTER for existing tables)
 async function initDatabase() {
   try {
+    // Create users table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id SERIAL PRIMARY KEY,
         username VARCHAR(50) UNIQUE NOT NULL,
         email VARCHAR(100) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
-        phone VARCHAR(20),
-        country VARCHAR(50),
         balance DECIMAL(10,2) DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
+    // Add missing columns to users table if they don't exist
+    try {
+      await pool.query('ALTER TABLE users ADD COLUMN phone VARCHAR(20)');
+    } catch (err) {
+      if (!err.message.includes('already exists')) {
+        console.log('Phone column already exists or other error');
+      }
+    }
+
+    try {
+      await pool.query('ALTER TABLE users ADD COLUMN country VARCHAR(50)');
+    } catch (err) {
+      if (!err.message.includes('already exists')) {
+        console.log('Country column already exists or other error');
+      }
+    }
+
+    try {
+      await pool.query('ALTER TABLE users ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+    } catch (err) {
+      if (!err.message.includes('already exists')) {
+        console.log('updated_at column already exists or other error');
+      }
+    }
+
+    // Create orders table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS orders (
         id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        user_id INTEGER REFERENCES users(id),
         service VARCHAR(100) NOT NULL,
         link TEXT NOT NULL,
         quantity INTEGER NOT NULL,
         status VARCHAR(20) DEFAULT 'pending',
         price DECIMAL(10,2) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
+    // Add missing columns to orders table if they don't exist
+    try {
+      await pool.query('ALTER TABLE orders ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP');
+    } catch (err) {
+      if (!err.message.includes('already exists')) {
+        console.log('Orders updated_at column already exists or other error');
+      }
+    }
+
+    // Create wallets table if it doesn't exist
     await pool.query(`
       CREATE TABLE IF NOT EXISTS wallets (
         id SERIAL PRIMARY KEY,
-        user_id INTEGER UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+        user_id INTEGER UNIQUE REFERENCES users(id),
         balance DECIMAL(10,2) DEFAULT 0,
         spent DECIMAL(10,2) DEFAULT 0,
         total_topup DECIMAL(10,2) DEFAULT 0,
@@ -103,7 +136,7 @@ app.post('/api/auth/signup', async (req, res) => {
   try {
     const hash = await bcrypt.hash(password, 10);
     
-    // Insert user
+    // Insert user with optional phone and country
     const result = await pool.query(
       'INSERT INTO users (username, email, password_hash, phone, country) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, balance',
       [username, email, hash, phone || null, country || null]
@@ -112,10 +145,14 @@ app.post('/api/auth/signup', async (req, res) => {
     const user = result.rows[0];
     
     // Create wallet for user
-    await pool.query(
-      'INSERT INTO wallets (user_id, balance) VALUES ($1, $2)',
-      [user.id, 0]
-    );
+    try {
+      await pool.query(
+        'INSERT INTO wallets (user_id, balance) VALUES ($1, $2)',
+        [user.id, 0]
+      );
+    } catch (err) {
+      console.log('Wallet creation error (may already exist):', err.message);
+    }
     
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'your-secret-key');
     res.json({ token, user });
@@ -149,8 +186,8 @@ app.post('/api/auth/login', async (req, res) => {
         username: user.username, 
         email: user.email, 
         balance: user.balance,
-        phone: user.phone,
-        country: user.country
+        phone: user.phone || null,
+        country: user.country || null
       } 
     });
   } catch (err) {
@@ -181,8 +218,8 @@ app.put('/api/user/profile', authMiddleware, async (req, res) => {
   
   try {
     const result = await pool.query(
-      'UPDATE users SET username = $1, phone = $2, country = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
-      [username, phone, country, req.user.id]
+      'UPDATE users SET username = COALESCE($1, username), phone = COALESCE($2, phone), country = COALESCE($3, country), updated_at = CURRENT_TIMESTAMP WHERE id = $4 RETURNING *',
+      [username || null, phone || null, country || null, req.user.id]
     );
     
     res.json(result.rows[0]);
@@ -260,10 +297,19 @@ app.post('/api/wallet/add', authMiddleware, async (req, res) => {
     );
     
     // Update wallet total_topup
-    await pool.query(
-      'UPDATE wallets SET balance = balance + $1, total_topup = total_topup + $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
-      [amount, req.user.id]
-    );
+    try {
+      await pool.query(
+        'UPDATE wallets SET balance = balance + $1, total_topup = total_topup + $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
+        [amount, req.user.id]
+      );
+    } catch (err) {
+      console.log('Wallet update error:', err.message);
+      // If wallet doesn't exist, create it
+      await pool.query(
+        'INSERT INTO wallets (user_id, balance, total_topup) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
+        [req.user.id, amount, amount]
+      );
+    }
     
     const result = await pool.query('SELECT balance FROM users WHERE id = $1', [req.user.id]);
     res.json({ balance: parseFloat(result.rows[0].balance) });
@@ -293,10 +339,19 @@ app.post('/api/wallet/deduct', authMiddleware, async (req, res) => {
     );
     
     // Update wallet spent
-    await pool.query(
-      'UPDATE wallets SET spent = spent + $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
-      [amount, req.user.id]
-    );
+    try {
+      await pool.query(
+        'UPDATE wallets SET spent = spent + $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
+        [amount, req.user.id]
+      );
+    } catch (err) {
+      console.log('Wallet update error:', err.message);
+      // If wallet doesn't exist, create it
+      await pool.query(
+        'INSERT INTO wallets (user_id, spent) VALUES ($1, $2) ON CONFLICT DO NOTHING',
+        [req.user.id, amount]
+      );
+    }
     
     const result = await pool.query('SELECT balance FROM users WHERE id = $1', [req.user.id]);
     res.json({ balance: parseFloat(result.rows[0].balance) });
@@ -413,9 +468,9 @@ app.get('/api/admin/wallets', async (req, res) => {
         u.username,
         u.email,
         u.balance,
-        w.spent,
-        w.total_topup,
-        w.updated_at,
+        COALESCE(w.spent, 0) as spent,
+        COALESCE(w.total_topup, 0) as total_topup,
+        COALESCE(w.updated_at, u.created_at) as updated_at,
         u.created_at
       FROM users u
       LEFT JOIN wallets w ON u.id = w.user_id
@@ -472,10 +527,14 @@ app.post('/api/admin/users/balance', async (req, res) => {
     }
     
     // Also update wallet
-    await pool.query(
-      'UPDATE wallets SET balance = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
-      [balance, result.rows[0].id]
-    );
+    try {
+      await pool.query(
+        'UPDATE wallets SET balance = $1, updated_at = CURRENT_TIMESTAMP WHERE user_id = $2',
+        [balance, result.rows[0].id]
+      );
+    } catch (err) {
+      console.log('Wallet update error:', err.message);
+    }
     
     res.json({ success: true, user: result.rows[0] });
   } catch (err) {
@@ -489,10 +548,18 @@ app.delete('/api/admin/users/:id', async (req, res) => {
     const userId = req.params.id;
     
     // Delete wallets first (has foreign key)
-    await pool.query('DELETE FROM wallets WHERE user_id = $1', [userId]);
+    try {
+      await pool.query('DELETE FROM wallets WHERE user_id = $1', [userId]);
+    } catch (err) {
+      console.log('Wallet deletion error:', err.message);
+    }
     
     // Delete orders
-    await pool.query('DELETE FROM orders WHERE user_id = $1', [userId]);
+    try {
+      await pool.query('DELETE FROM orders WHERE user_id = $1', [userId]);
+    } catch (err) {
+      console.log('Orders deletion error:', err.message);
+    }
     
     // Delete user
     const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING *', [userId]);
