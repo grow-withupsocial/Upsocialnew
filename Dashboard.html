@@ -6,6 +6,7 @@
     <title>Dashboard - UpSocial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { height: 100%; }
@@ -607,6 +608,77 @@
             transform: scale(0.98);
         }
         
+        .form-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .preset-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .preset-btn {
+            padding: 10px;
+            border: 1.5px solid #e8eef7;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0a0e27;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .preset-btn:hover {
+            border-color: #3CB371;
+            color: #3CB371;
+            background: rgba(60, 179, 113, 0.05);
+        }
+        
+        .preset-btn.active {
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            color: white;
+            border-color: #3CB371;
+        }
+        
+        .payment-status {
+            display: none;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .payment-status.show {
+            display: block;
+        }
+        
+        .payment-status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        
+        .payment-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .payment-status.processing {
+            background: #dbeafe;
+            color: #0c2340;
+            border: 1px solid #93c5fd;
+        }
+        
         @media (max-width: 600px) {
             main { padding: 12px; }
             .features-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -798,12 +870,24 @@
                 <div class="modal-title" id="modalTitle">Add Money</div>
                 <button class="modal-close" onclick="closeModal()">×</button>
             </div>
+            
+            <div class="payment-status" id="paymentStatus"></div>
+            
             <div id="add-funds-content">
+                <div class="preset-amounts">
+                    <button class="preset-btn" onclick="setAmount(500)">₦500</button>
+                    <button class="preset-btn" onclick="setAmount(1000)">₦1,000</button>
+                    <button class="preset-btn" onclick="setAmount(5000)">₦5,000</button>
+                    <button class="preset-btn" onclick="setAmount(10000)">₦10,000</button>
+                    <button class="preset-btn" onclick="setAmount(20000)">₦20,000</button>
+                    <button class="preset-btn" onclick="setAmount(50000)">₦50,000</button>
+                </div>
+                
                 <div class="form-group">
                     <label class="form-label">Amount (₦)</label>
-                    <input type="number" class="form-input" id="fundAmount" placeholder="Enter amount" min="100">
+                    <input type="number" class="form-input" id="fundAmount" placeholder="Enter amount" min="100" value="1000">
                 </div>
-                <button class="form-button" onclick="payWithKora()">Fund Wallet</button>
+                <button class="form-button" id="fundButton" onclick="payWithKora()">Fund Wallet</button>
             </div>
         </div>
     </div>
@@ -811,7 +895,6 @@
     <script>
         const API_URL = 'https://upsocial-api.onrender.com/api';
 
-        // Get auth headers
         function getHeaders() {
             const token = localStorage.getItem('token');
             return {
@@ -835,7 +918,6 @@
 
         async function loadUserData() {
             try {
-                // Get user profile from API
                 const userResponse = await fetch(API_URL + '/wallet', {
                     headers: getHeaders()
                 });
@@ -850,12 +932,9 @@
                 }
 
                 const walletData = await userResponse.json();
-                
-                // Get user info from localStorage (stored at login)
                 const userStr = localStorage.getItem('upsocial_user');
                 const user = userStr ? JSON.parse(userStr) : {};
                 
-                // Update UI
                 const initial = (user.username || 'U')[0].toUpperCase();
                 document.getElementById('userInitial').textContent = initial;
                 document.getElementById('userName').textContent = user.username || 'User';
@@ -863,7 +942,6 @@
 
             } catch (err) {
                 console.error('Error loading user data:', err);
-                // Fallback to localStorage if API fails
                 const userStr = localStorage.getItem('upsocial_user');
                 const user = userStr ? JSON.parse(userStr) : {};
                 const initial = (user.username || 'U')[0].toUpperCase();
@@ -875,21 +953,135 @@
 
         function openModal(type) {
             document.getElementById('modal').classList.add('active');
+            document.getElementById('paymentStatus').className = 'payment-status';
+            document.getElementById('fundAmount').value = '1000';
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
         }
 
         function closeModal() {
             document.getElementById('modal').classList.remove('active');
             document.getElementById('fundAmount').value = '';
+            document.getElementById('paymentStatus').className = 'payment-status';
+            const btn = document.getElementById('fundButton');
+            btn.textContent = 'Fund Wallet';
+            btn.disabled = false;
         }
 
-        function payWithKora() {
-            const amount = document.getElementById('fundAmount').value;
+        function setAmount(amount) {
+            document.getElementById('fundAmount').value = amount;
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('paymentStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'payment-status show ' + type;
+        }
+
+        // ========== KORAPAY PAYMENT INTEGRATION ==========
+        async function payWithKora() {
+            const amount = parseFloat(document.getElementById('fundAmount').value);
+            
             if (!amount || amount < 100) {
-                alert('Minimum funding amount is ₦100');
+                showStatus('Minimum funding amount is ₦100', 'error');
                 return;
             }
-            // Your existing Korapay logic stays the same
-            alert('Korapay integration - Amount: ₦' + amount);
+
+            const btn = document.getElementById('fundButton');
+            const originalText = btn.textContent;
+            btn.textContent = 'Processing...';
+            btn.disabled = true;
+            showStatus('Initializing payment...', 'processing');
+
+            try {
+                // Step 1: Initialize payment on backend
+                const initResponse = await fetch(API_URL + '/payment/initialize', {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ amount })
+                });
+
+                const initData = await initResponse.json();
+                
+                if (!initData.success) {
+                    throw new Error(initData.error || 'Failed to initialize payment');
+                }
+
+                showStatus('Opening secure payment...', 'processing');
+
+                // Step 2: Open Korapay checkout
+                window.Korapay.initialize({
+                    key: initData.publicKey,
+                    reference: initData.reference,
+                    amount: initData.amount,
+                    currency: initData.currency || 'NGN',
+                    customer: {
+                        name: initData.customer.name,
+                        email: initData.customer.email
+                    },
+                    notification_url: API_URL + '/webhook/korapay',
+                    onClose: function() {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        showStatus('Payment cancelled. You can try again.', 'error');
+                    },
+                    onSuccess: async function(data) {
+                        console.log('Payment success:', data);
+                        showStatus('Payment successful! Verifying and funding wallet...', 'processing');
+                        
+                        // Step 3: Verify payment and auto-fund wallet
+                        try {
+                            const verifyResponse = await fetch(API_URL + '/payment/verify/' + initData.reference, {
+                                headers: getHeaders()
+                            });
+                            
+                            const verifyData = await verifyResponse.json();
+                            
+                            if (verifyData.status === 'success') {
+                                // Update wallet display
+                                document.getElementById('walletAmount').textContent = '₦' + verifyData.balance.toFixed(2);
+                                
+                                // Update localStorage user data
+                                const userStr = localStorage.getItem('upsocial_user');
+                                if (userStr) {
+                                    const user = JSON.parse(userStr);
+                                    user.balance = verifyData.balance;
+                                    localStorage.setItem('upsocial_user', JSON.stringify(user));
+                                }
+                                
+                                showStatus('✅ ₦' + verifyData.amount.toFixed(2) + ' added! New balance: ₦' + verifyData.balance.toFixed(2), 'success');
+                                
+                                setTimeout(() => {
+                                    closeModal();
+                                }, 3000);
+                            } else {
+                                showStatus('⏳ Payment is being processed. Your wallet will be updated shortly via webhook.', 'processing');
+                                setTimeout(() => closeModal(), 4000);
+                            }
+                        } catch (verifyErr) {
+                            console.error('Verification error:', verifyErr);
+                            showStatus('✅ Payment completed! Your wallet will be updated shortly.', 'success');
+                            setTimeout(() => closeModal(), 3000);
+                        }
+                        
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    },
+                    onFailed: function(data) {
+                        console.error('Payment failed:', data);
+                        showStatus('❌ Payment failed. Please try again.', 'error');
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                });
+
+            } catch (err) {
+                console.error('Payment error:', err);
+                showStatus('❌ ' + err.message, 'error');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
         }
 
         document.getElementById('modal').addEventListener('click', function(e) {
