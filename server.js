@@ -137,6 +137,108 @@ app.post('/api/wallet/add', authMiddleware, async (req, res) => {
   res.json({ balance: result.rows[0].balance });
 });
 
+// ========== ADMIN API ROUTES ==========
+
+// GET /api/admin/stats - Dashboard overview
+app.get('/api/admin/stats', async (req, res) => {
+  try {
+    const [users] = await pool.query('SELECT COUNT(*) as count FROM users');
+    const [orders] = await pool.query('SELECT COUNT(*) as count FROM orders');
+    const [revenue] = await pool.query('SELECT COALESCE(SUM(price), 0) as total FROM orders WHERE status = $1', ['completed']);
+    const [completed] = await pool.query('SELECT COUNT(*) as count FROM orders WHERE status = $1', ['completed']);
+    const [pending] = await pool.query('SELECT COUNT(*) as count FROM orders WHERE status = $1', ['pending']);
+    const [processing] = await pool.query('SELECT COUNT(*) as count FROM orders WHERE status = $1', ['processing']);
+    const [avg] = await pool.query('SELECT COALESCE(AVG(price), 0) as avg FROM orders');
+
+    res.json({
+      totalUsers: parseInt(users[0].count),
+      totalOrders: parseInt(orders[0].count),
+      totalRevenue: parseFloat(revenue[0].total),
+      completedOrders: parseInt(completed[0].count),
+      pendingOrders: parseInt(pending[0].count),
+      processingOrders: parseInt(processing[0].count),
+      activeUsers: parseInt(users[0].count),
+      avgOrderValue: parseFloat(avg[0].avg)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/users - All users
+app.get('/api/admin/users', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, username, email, balance, created_at as "joinDate", 'active' as status
+      FROM users 
+      ORDER BY created_at DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/orders - All orders
+app.get('/api/admin/orders', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 100;
+    const result = await pool.query(`
+      SELECT o.*, u.username 
+      FROM orders o 
+      JOIN users u ON o.user_id = u.id 
+      ORDER BY o.created_at DESC 
+      LIMIT $1
+    `, [limit]);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/admin/payments - All payments (user balances + deposits)
+app.get('/api/admin/payments', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 100;
+    const result = await pool.query(`
+      SELECT 
+        u.username,
+        u.email,
+        u.balance,
+        COALESCE((SELECT SUM(price) FROM orders WHERE user_id = u.id), 0) as spent,
+        u.created_at as "joinDate"
+      FROM users u
+      ORDER BY u.created_at DESC
+      LIMIT $1
+    `, [limit]);
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/users/balance - Update user balance
+app.post('/api/admin/users/balance', async (req, res) => {
+  try {
+    const { email, balance } = req.body;
+    await pool.query('UPDATE users SET balance = $1 WHERE email = $2', [balance, email]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/admin/orders/status - Update order status
+app.post('/api/admin/orders/status', async (req, res) => {
+  try {
+    const { orderId, status } = req.body;
+    await pool.query('UPDATE orders SET status = $1 WHERE id = $2', [status, orderId]);
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // START SERVER
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
