@@ -1389,12 +1389,9 @@
         }
 
         function loadAdminInfo() {
-            const adminUser = JSON.parse(localStorage.getItem('upsocial_user') || '{}');
-            const adminName = adminUser.username || 'Admin';
-            const initial = adminName[0].toUpperCase();
-            
-            document.getElementById('adminName').textContent = adminName;
-            document.getElementById('adminAvatar').textContent = initial;
+            // Show "Admin User" instead of logged-in user
+            document.getElementById('adminName').textContent = 'Admin';
+            document.getElementById('adminAvatar').textContent = 'A';
         }
 
         function switchPage(page) {
@@ -1415,181 +1412,222 @@
             else if (page === 'settings') loadSystemSettings();
         }
 
-        function loadOverviewStats() {
-            let totalUsers = 0;
-            let totalOrders = 0;
-            let totalRevenue = 0;
-            let completedOrders = 0;
-            let pendingOrders = 0;
-            let processingOrders = 0;
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const email = key.replace('upsocial_userOrders_', '');
+        async function loadOverviewStats() {
+            try {
+                const token = sessionStorage.getItem(SESSION_KEY);
                 
-                if (email && key.startsWith('upsocial_userOrders_')) {
-                    totalUsers++;
-                    
-                    const orders = JSON.parse(localStorage.getItem(key) || '[]');
-                    totalOrders += orders.length;
-                    
-                    orders.forEach(order => {
-                        totalRevenue += order.price || 0;
-                        if (order.status === 'completed') completedOrders++;
-                        if (order.status === 'pending') pendingOrders++;
-                        if (order.status === 'processing') processingOrders++;
-                    });
+                // Fetch users from API
+                const usersRes = await fetch(API_URL + '/users', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                }).catch(() => null);
+
+                // Fetch orders from API
+                const ordersRes = await fetch(API_URL + '/orders', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                }).catch(() => null);
+
+                let totalUsers = 0;
+                let totalOrders = 0;
+                let totalRevenue = 0;
+                let completedOrders = 0;
+                let pendingOrders = 0;
+                let processingOrders = 0;
+
+                // Process users data
+                if (usersRes && usersRes.ok) {
+                    const users = await usersRes.json();
+                    totalUsers = Array.isArray(users) ? users.length : 0;
+                } else {
+                    console.log('Could not fetch users from API, trying localStorage');
+                    // Fallback to localStorage
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key.startsWith('upsocial_userWallet_')) totalUsers++;
+                    }
                 }
-            }
 
-            const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
-
-            document.getElementById('totalUsers').textContent = totalUsers;
-            document.getElementById('totalOrders').textContent = totalOrders;
-            document.getElementById('totalRevenue').textContent = '₦' + totalRevenue.toFixed(2);
-            document.getElementById('completedOrders').textContent = completedOrders;
-            document.getElementById('pendingOrders').textContent = pendingOrders;
-            document.getElementById('processingOrders').textContent = processingOrders;
-            document.getElementById('activeUsers').textContent = totalUsers;
-            document.getElementById('avgOrderValue').textContent = '₦' + avgOrderValue.toFixed(2);
-        }
-
-        function loadUsers() {
-            const tbody = document.getElementById('usersTable');
-            const users = [];
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const email = key.replace('upsocial_userOrders_', '');
-                
-                if (email && key.startsWith('upsocial_userOrders_')) {
-                    const userStr = localStorage.getItem('upsocial_user');
-                    const userData = userStr && email === localStorage.getItem('upsocial_currentUser') 
-                        ? JSON.parse(userStr) 
-                        : { username: 'N/A', email: email };
-                    
-                    users.push({
-                        ...userData,
-                        email: email,
-                        joinDate: userData.joinDate || new Date().toLocaleDateString()
-                    });
-                }
-            }
-
-            if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No users found</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = users.map(user => `
-                <tr>
-                    <td><strong>${user.username || 'N/A'}</strong></td>
-                    <td>${user.email}</td>
-                    <td>${user.phone || 'N/A'}</td>
-                    <td>${user.country || 'N/A'}</td>
-                    <td>${user.joinDate}</td>
-                    <td><span class="status-badge status-active">Active</span></td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="action-btn btn-view" onclick="viewUserDetails('${user.email}')">View</button>
-                            <button class="action-btn btn-delete" onclick="deleteUser('${user.email}')">Delete</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function loadOrders() {
-            const tbody = document.getElementById('ordersTable');
-            const allOrders = [];
-
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const email = key.replace('upsocial_userOrders_', '');
-                
-                if (email && key.startsWith('upsocial_userOrders_')) {
-                    const orders = JSON.parse(localStorage.getItem(key) || '[]');
-                    const userData = JSON.parse(localStorage.getItem('upsocial_user') || '{}');
-                    
-                    orders.forEach(order => {
-                        allOrders.push({
-                            ...order,
-                            username: userData.username || 'N/A',
-                            email: email
+                // Process orders data
+                if (ordersRes && ordersRes.ok) {
+                    const orders = await ordersRes.json();
+                    if (Array.isArray(orders)) {
+                        totalOrders = orders.length;
+                        orders.forEach(order => {
+                            totalRevenue += parseFloat(order.total_price) || 0;
+                            const status = (order.status || '').toLowerCase();
+                            if (status === 'completed') completedOrders++;
+                            else if (status === 'pending') pendingOrders++;
+                            else if (status === 'processing') processingOrders++;
                         });
-                    });
+                    }
+                } else {
+                    console.log('Could not fetch orders from API, trying localStorage');
+                    // Fallback to localStorage
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        if (key.startsWith('upsocial_userOrders_')) {
+                            const orders = JSON.parse(localStorage.getItem(key) || '[]');
+                            totalOrders += orders.length;
+                            orders.forEach(order => {
+                                totalRevenue += order.price || 0;
+                                if (order.status === 'completed') completedOrders++;
+                                if (order.status === 'pending') pendingOrders++;
+                                if (order.status === 'processing') processingOrders++;
+                            });
+                        }
+                    }
                 }
-            }
 
-            if (allOrders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No orders found</td></tr>';
-                return;
-            }
+                const avgOrderValue = totalOrders > 0 ? totalRevenue / totalOrders : 0;
 
-            tbody.innerHTML = allOrders.map(order => `
-                <tr>
-                    <td><strong>${order.id || 'N/A'}</strong></td>
-                    <td>${order.username}</td>
-                    <td>${order.service || 'N/A'}</td>
-                    <td>${order.platform || 'N/A'}</td>
-                    <td>${order.quantity || 0}</td>
-                    <td>₦${(order.price || 0).toFixed(2)}</td>
-                    <td><span class="status-badge status-${order.status || 'pending'}">${(order.status || 'pending').charAt(0).toUpperCase() + (order.status || 'pending').slice(1)}</span></td>
-                    <td>${order.date || 'N/A'}</td>
-                    <td>
-                        <button class="action-btn btn-edit" onclick="openUpdateOrderModal('${order.id}', '${order.status}', '${order.email}')">Update</button>
-                    </td>
-                </tr>
-            `).join('');
+                document.getElementById('totalUsers').textContent = totalUsers;
+                document.getElementById('totalOrders').textContent = totalOrders;
+                document.getElementById('totalRevenue').textContent = '₦' + totalRevenue.toFixed(2);
+                document.getElementById('completedOrders').textContent = completedOrders;
+                document.getElementById('pendingOrders').textContent = pendingOrders;
+                document.getElementById('processingOrders').textContent = processingOrders;
+                document.getElementById('activeUsers').textContent = totalUsers;
+                document.getElementById('avgOrderValue').textContent = '₦' + avgOrderValue.toFixed(2);
+            } catch (error) {
+                console.error('Error loading overview stats:', error);
+                // Fallback to empty if everything fails
+                document.getElementById('totalUsers').textContent = '0';
+                document.getElementById('totalOrders').textContent = '0';
+                document.getElementById('totalRevenue').textContent = '₦0.00';
+            }
         }
 
-        function loadPayments() {
-            const tbody = document.getElementById('paymentsTable');
-            const payments = [];
+        async function loadUsers() {
+            const tbody = document.getElementById('usersTable');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Loading users...</td></tr>';
 
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                const email = key.replace('upsocial_userWallet_', '');
-                
-                if (email && key.startsWith('upsocial_userWallet_')) {
-                    const wallet = JSON.parse(localStorage.getItem(key) || '{"balance":0,"transactions":[]}');
-                    const orders = JSON.parse(localStorage.getItem('upsocial_userOrders_' + email) || '[]');
-                    const userData = JSON.parse(localStorage.getItem('upsocial_user') || '{}');
-                    const spent = orders.reduce((sum, o) => sum + (o.price || 0), 0);
-                    const deposits = (wallet.transactions || []).reduce((sum, t) => sum + (t.amount || 0), 0);
-                    const lastDeposit = wallet.transactions && wallet.transactions.length > 0 
-                        ? wallet.transactions[wallet.transactions.length - 1].date 
-                        : 'Never';
-                    
-                    payments.push({
-                        username: userData.username || 'N/A',
-                        email: email,
-                        balance: wallet.balance || 0,
-                        deposits: deposits,
-                        spent: spent,
-                        lastDeposit: lastDeposit
-                    });
+            try {
+                const token = sessionStorage.getItem(SESSION_KEY);
+                const response = await fetch(API_URL + '/users', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch users');
+
+                const users = await response.json();
+
+                if (!Array.isArray(users) || users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No users found</td></tr>';
+                    return;
                 }
-            }
 
-            if (payments.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No payment records found</td></tr>';
-                return;
+                tbody.innerHTML = users.map(user => `
+                    <tr>
+                        <td><strong>${user.username || 'N/A'}</strong></td>
+                        <td>${user.email || 'N/A'}</td>
+                        <td>${user.phone || 'N/A'}</td>
+                        <td>${user.country || 'N/A'}</td>
+                        <td>${new Date(user.created_at).toLocaleDateString() || 'N/A'}</td>
+                        <td><span class="status-badge status-active">Active</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-view" onclick="viewUserDetails('${user.email}')">View</button>
+                                <button class="action-btn btn-delete" onclick="deleteUser('${user.email}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading users:', error);
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #ef4444;">❌ Error loading users from database</td></tr>';
             }
+        }
 
-            tbody.innerHTML = payments.map(payment => `
-                <tr>
-                    <td><strong>${payment.username}</strong></td>
-                    <td>${payment.email}</td>
-                    <td>₦${payment.balance.toFixed(2)}</td>
-                    <td>₦${payment.deposits.toFixed(2)}</td>
-                    <td>₦${payment.spent.toFixed(2)}</td>
-                    <td>${payment.lastDeposit}</td>
-                    <td>
-                        <button class="action-btn btn-edit" onclick="openEditBalanceModal('${payment.email}', '${payment.username}', ${payment.balance})">Adjust</button>
-                    </td>
-                </tr>
-            `).join('');
+        async function loadOrders() {
+            const tbody = document.getElementById('ordersTable');
+            tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 20px;">Loading orders...</td></tr>';
+
+            try {
+                const token = sessionStorage.getItem(SESSION_KEY);
+                const response = await fetch(API_URL + '/orders', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch orders');
+
+                const allOrders = await response.json();
+
+                if (!Array.isArray(allOrders) || allOrders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px;">No orders found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = allOrders.map(order => `
+                    <tr>
+                        <td><strong>#${order.id || 'N/A'}</strong></td>
+                        <td>${order.user_email || 'N/A'}</td>
+                        <td>${order.service_name || 'N/A'}</td>
+                        <td>${order.category || 'N/A'}</td>
+                        <td>${order.quantity || 0}</td>
+                        <td>₦${parseFloat(order.total_price || 0).toFixed(2)}</td>
+                        <td><span class="status-badge status-${(order.status || 'pending').toLowerCase()}">${(order.status || 'Pending').charAt(0).toUpperCase() + (order.status || 'Pending').slice(1)}</span></td>
+                        <td>${new Date(order.created_at).toLocaleDateString() || 'N/A'}</td>
+                        <td>
+                            <button class="action-btn btn-edit" onclick="openUpdateOrderModal('${order.id}', '${order.status}', '${order.user_email}')">Update</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 40px; color: #ef4444;">❌ Error loading orders from database</td></tr>';
+            }
+        }
+
+        async function loadPayments() {
+            const tbody = document.getElementById('paymentsTable');
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px;">Loading payments...</td></tr>';
+
+            try {
+                const token = sessionStorage.getItem(SESSION_KEY);
+                const response = await fetch(API_URL + '/wallet/all', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch payments');
+
+                const payments = await response.json();
+
+                if (!Array.isArray(payments) || payments.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px;">No payment records found</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = payments.map(payment => `
+                    <tr>
+                        <td><strong>${payment.username || 'N/A'}</strong></td>
+                        <td>${payment.email || payment.user_email || 'N/A'}</td>
+                        <td>₦${parseFloat(payment.balance || 0).toFixed(2)}</td>
+                        <td>₦${parseFloat(payment.total_topup || payment.deposits || 0).toFixed(2)}</td>
+                        <td>₦${parseFloat(payment.spent || 0).toFixed(2)}</td>
+                        <td>${payment.last_deposit || 'Never'}</td>
+                        <td>
+                            <button class="action-btn btn-edit" onclick="openEditBalanceModal('${payment.email || payment.user_email}', '${payment.username || 'N/A'}', ${payment.balance || 0})">Adjust</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading payments:', error);
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 40px; color: #ef4444;">❌ Error loading payments from database</td></tr>';
+            }
         }
 
         function loadProviders() {
@@ -2013,4 +2051,4 @@
         }
     </script>
 </body>
-    </html>
+                </html>
