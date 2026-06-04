@@ -133,7 +133,10 @@
 
                 // Save token and user
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('upsocial_user', JSON.stringify(data.user));
+                localStorage.setItem('upsocial_user', JSON.stringify({
+                    ...data.user,
+                    joinDate: new Date().toLocaleDateString()
+                }));
                 localStorage.setItem('upsocial_loggedIn', 'true');
                 localStorage.setItem('upsocial_currentUser', data.user.email);
 
