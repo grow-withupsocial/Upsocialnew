@@ -13,23 +13,25 @@ function getHeaders() {
   const token = localStorage.getItem('token');
   return {
     'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    ...(token && { 'Authorization': 'Bearer ' + token })
   };
 }
 
 // Sign up
-async function signup(username, email, password) {
+async function signup(username, email, password, phone, country) {
   try {
-    const response = await fetch(`${API_URL}/auth/signup`, {
+    const response = await fetch(API_URL + '/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
+      body: JSON.stringify({ username, email, password, phone, country })
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Signup failed');
     localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    window.location.href = 'dashboard.html';
+    localStorage.setItem('upsocial_user', JSON.stringify(data.user));
+    localStorage.setItem('upsocial_loggedIn', 'true');
+    localStorage.setItem('upsocial_currentUser', data.user.email);
+    window.location.href = 'Dashboard.html';
   } catch (err) {
     alert(err.message);
   }
@@ -38,7 +40,7 @@ async function signup(username, email, password) {
 // Login
 async function login(email, password) {
   try {
-    const response = await fetch(`${API_URL}/auth/login`, {
+    const response = await fetch(API_URL + '/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -46,8 +48,10 @@ async function login(email, password) {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Login failed');
     localStorage.setItem('token', data.token);
-    localStorage.setItem('user', JSON.stringify(data.user));
-    window.location.href = 'dashboard.html';
+    localStorage.setItem('upsocial_user', JSON.stringify(data.user));
+    localStorage.setItem('upsocial_loggedIn', 'true');
+    localStorage.setItem('upsocial_currentUser', data.user.email);
+    window.location.href = 'Dashboard.html';
   } catch (err) {
     alert(err.message);
   }
@@ -56,16 +60,18 @@ async function login(email, password) {
 // Logout
 function logout() {
   localStorage.removeItem('token');
-  localStorage.removeItem('user');
+  localStorage.removeItem('upsocial_user');
+  localStorage.removeItem('upsocial_loggedIn');
+  localStorage.removeItem('upsocial_currentUser');
   window.location.href = 'index.html';
 }
 
 // ==================== ORDERS ====================
 
-// Get user's orders
+// Get user's orders from API
 async function getOrders() {
   try {
-    const response = await fetch(`${API_URL}/orders`, {
+    const response = await fetch(API_URL + '/orders', {
       headers: getHeaders()
     });
     if (!response.ok) throw new Error('Failed to load orders');
@@ -76,10 +82,10 @@ async function getOrders() {
   }
 }
 
-// Create new order
+// Create new order via API
 async function createOrder(service, link, quantity) {
   try {
-    const response = await fetch(`${API_URL}/orders`, {
+    const response = await fetch(API_URL + '/orders', {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ service, link, quantity })
@@ -95,10 +101,10 @@ async function createOrder(service, link, quantity) {
 
 // ==================== WALLET ====================
 
-// Get wallet balance
+// Get wallet balance from API
 async function getBalance() {
   try {
-    const response = await fetch(`${API_URL}/wallet`, {
+    const response = await fetch(API_URL + '/wallet', {
       headers: getHeaders()
     });
     if (!response.ok) throw new Error('Failed to load balance');
@@ -110,10 +116,24 @@ async function getBalance() {
   }
 }
 
+// Get transaction history from API
+async function getTransactions() {
+  try {
+    const response = await fetch(API_URL + '/transactions', {
+      headers: getHeaders()
+    });
+    if (!response.ok) throw new Error('Failed to load transactions');
+    return await response.json();
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
 // Add funds (mock - integrate real payment later)
 async function addFunds(amount) {
   try {
-    const response = await fetch(`${API_URL}/wallet/add`, {
+    const response = await fetch(API_URL + '/wallet/add', {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ amount })
@@ -130,7 +150,7 @@ async function addFunds(amount) {
 
 // Format currency
 function formatCurrency(amount) {
-  return '$' + parseFloat(amount).toFixed(2);
+  return 'N' + parseFloat(amount).toFixed(2);
 }
 
 // Show loading
@@ -147,7 +167,8 @@ function hideLoading(id) {
 
 // Update user info in header
 function updateUserUI() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const userStr = localStorage.getItem('upsocial_user');
+  const user = userStr ? JSON.parse(userStr) : {};
   const userNameEl = document.getElementById('userName');
   const userBalanceEl = document.getElementById('userBalance');
   if (userNameEl) userNameEl.textContent = user.username || 'User';
@@ -161,39 +182,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isLoggedIn()) {
     updateUserUI();
     getBalance().then(balance => {
-      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      const userStr = localStorage.getItem('upsocial_user');
+      const user = userStr ? JSON.parse(userStr) : {};
       user.balance = balance;
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('upsocial_user', JSON.stringify(user));
       updateUserUI();
     });
   }
-  
+
   // Protect dashboard pages
-  const protectedPages = ['dashboard.html', 'new-order.html', 'my-orders.html', 'wallet-history.html', 'profile.html'];
+  const protectedPages = ['Dashboard.html', 'new-order.html', 'my-orders.html', 'wallet-history.html', 'profile.html'];
   const currentPage = window.location.pathname.split('/').pop();
   if (protectedPages.includes(currentPage) && !isLoggedIn()) {
     window.location.href = 'login.html';
-  }
-});
-  } catch (err) {
-    showError(err.message);
-  }
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', () => {
-  // Load existing items
-  loadItems();
-  
-  // Handle form submission
-  const form = document.getElementById('itemForm');
-  if (form) {
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const title = document.getElementById('title').value;
-      const description = document.getElementById('description').value;
-      addItem(title, description);
-      form.reset();
-    });
   }
 });
