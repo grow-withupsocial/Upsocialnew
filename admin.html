@@ -31,11 +31,7 @@
             z-index: 100;
         }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
 
         .menu-toggle {
             background: none;
@@ -54,53 +50,11 @@
 
         .menu-toggle:hover { background: #f5f7fa; }
 
-        .header-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0a0e27;
-        }
+        .header-title { font-size: 20px; font-weight: 700; color: #0a0e27; }
 
-        .header-right {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
+        .header-right { display: flex; gap: 12px; align-items: center; }
 
-        .admin-info {
-            text-align: right;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .admin-name {
-            font-weight: 600;
-            color: #0a0e27;
-            font-size: 13px;
-        }
-
-        .admin-role {
-            color: #8892a8;
-            font-size: 11px;
-        }
-
-        .admin-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            box-shadow: 0 2px 8px rgba(60, 179, 113, 0.2);
-        }
-
-        .container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
+        .container { display: flex; flex: 1; overflow: hidden; }
 
         .sidebar {
             width: 260px;
@@ -110,13 +64,8 @@
             padding: 20px 0;
         }
 
-        .sidebar-overlay {
-            display: none;
-        }
-
-        .sidebar-close {
-            display: none;
-        }
+        .sidebar-overlay { display: none; }
+        .sidebar-close { display: none; }
 
         .nav-section-title {
             padding: 12px 16px;
@@ -141,44 +90,14 @@
             font-weight: 500;
         }
 
-        .nav-item:hover {
-            background: #f5f7fa;
-            color: #3CB371;
-        }
+        .nav-item:hover { background: #f5f7fa; color: #3CB371; }
+        .nav-item.active { background: rgba(60, 179, 113, 0.08); color: #3CB371; border-right: 3px solid #3CB371; padding-right: 13px; }
 
-        .nav-item.active {
-            background: rgba(60, 179, 113, 0.08);
-            color: #3CB371;
-            border-right: 3px solid #3CB371;
-            padding-right: 13px;
-        }
+        .main-content { flex: 1; overflow-y: auto; padding: 28px; width: 100%; }
 
-        .nav-item i {
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
-        }
+        .page-title { font-size: 28px; font-weight: 700; color: #0a0e27; margin-bottom: 28px; }
 
-        .main-content {
-            flex: 1;
-            overflow-y: auto;
-            padding: 28px;
-            width: 100%;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #0a0e27;
-            margin-bottom: 28px;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 32px;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
 
         .stat-card {
             background: white;
@@ -189,10 +108,7 @@
             transition: 0.3s;
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-        }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.08); }
 
         .stat-icon { font-size: 28px; margin-bottom: 12px; }
         .stat-value { font-size: 28px; font-weight: 700; color: #0a0e27; margin-bottom: 6px; }
@@ -201,12 +117,7 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        .search-filter {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
+        .search-filter { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 
         .search-input {
             flex: 1;
@@ -218,11 +129,7 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #3CB371;
-            box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08);
-        }
+        .search-input:focus { outline: none; border-color: #3CB371; box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08); }
 
         .table-wrapper {
             background: white;
@@ -233,15 +140,9 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
-        .table-container {
-            overflow-x: auto;
-        }
+        .table-container { overflow-x: auto; }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
 
         th {
             background: #f5f7fa;
@@ -252,10 +153,7 @@
             border-bottom: 1px solid #e8eef7;
         }
 
-        td {
-            padding: 16px;
-            border-bottom: 1px solid #f0f2f5;
-        }
+        td { padding: 16px; border-bottom: 1px solid #f0f2f5; }
 
         tr:hover { background: #f9fafb; }
         tr:last-child td { border-bottom: none; }
@@ -273,11 +171,7 @@
         .status-completed { background: #d1fae5; color: #065f46; }
         .status-processing { background: #dbeafe; color: #0c2340; }
 
-        .action-buttons {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
+        .action-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
 
         .action-btn {
             padding: 6px 10px;
@@ -290,18 +184,10 @@
             font-family: 'Outfit', sans-serif;
         }
 
-        .btn-edit {
-            background: rgba(60, 179, 113, 0.1);
-            color: #3CB371;
-        }
-
+        .btn-edit { background: rgba(60, 179, 113, 0.1); color: #3CB371; }
         .btn-edit:hover { background: rgba(60, 179, 113, 0.2); }
 
-        .btn-delete {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
+        .btn-delete { background: #fee2e2; color: #991b1b; }
         .btn-delete:hover { background: #fca5a5; }
 
         .btn {
@@ -324,51 +210,7 @@
             box-shadow: 0 4px 12px rgba(60, 179, 113, 0.2);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(60, 179, 113, 0.3);
-        }
-
-        .btn-secondary {
-            background: #f5f7fa;
-            color: #0a0e27;
-            border: 1px solid #e8eef7;
-        }
-
-        .btn-secondary:hover { background: #e8eef7; }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #0a0e27;
-        }
-
-        .form-input, .form-select {
-            width: 100%;
-            padding: 12px;
-            border: 1.5px solid #e8eef7;
-            border-radius: 8px;
-            font-size: 13px;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: #3CB371;
-            box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(60, 179, 113, 0.3); }
 
         .modal {
             display: none;
@@ -384,9 +226,7 @@
             z-index: 200;
         }
 
-        .modal.active {
-            display: flex;
-        }
+        .modal.active { display: flex; }
 
         .modal-content {
             background: white;
@@ -399,18 +239,8 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
 
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: #0a0e27;
-        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-title { font-size: 20px; font-weight: 700; color: #0a0e27; }
 
         .modal-close {
             background: none;
@@ -427,23 +257,21 @@
 
         .modal-close:hover { color: #0a0e27; }
 
-        .settings-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-            border: 1px solid #e8eef7;
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #0a0e27; }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #e8eef7;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: 'Outfit', sans-serif;
         }
 
-        .settings-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #0a0e27;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .form-input:focus { outline: none; border-color: #3CB371; box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08); }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
         .message {
             padding: 14px 16px;
@@ -455,50 +283,13 @@
             animation: slideDown 0.3s ease-out;
         }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         .message.show { display: block; }
         .message.success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
         .message.error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #3CB371;
-        }
-
-        .quick-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-        }
-
-        .quick-stat-box {
-            padding: 12px;
-            background: #f5f7fa;
-            border-radius: 8px;
-        }
-
-        .quick-stat-label {
-            font-size: 11px;
-            color: #8892a8;
-            margin-bottom: 4px;
-        }
-
-        .quick-stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0a0e27;
-        }
-
-        @media (max-width: 1200px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .form-row { grid-template-columns: 1fr; }
-            .main-content { padding: 16px; }
-        }
+        .loading { text-align: center; padding: 40px; color: #3CB371; }
 
         @media (max-width: 768px) {
             .menu-toggle { display: flex; }
@@ -526,23 +317,13 @@
                 pointer-events: none;
                 transition: opacity 0.3s ease;
             }
-            .sidebar-overlay.active {
-                opacity: 1;
-                pointer-events: auto;
-            }
+            .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
             .sidebar-close { display: block; position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: #c5cad4; }
-            .header-title { font-size: 16px; }
-            .page-title { font-size: 22px; }
-            .stats-grid { grid-template-columns: 1fr; }
-            .main-content { padding: 12px; overflow-x: visible; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .main-content { padding: 16px; }
             table { font-size: 12px; }
             th, td { padding: 12px 8px; }
             .modal-content { width: 95%; padding: 20px; }
-            .action-buttons { flex-direction: column; gap: 4px; }
-            .action-btn { width: 100%; }
-            .search-filter { flex-direction: column; }
-            .search-input { min-width: 100%; }
-            .quick-stats { grid-template-columns: 1fr 1fr; }
         }
 
         @media (max-width: 480px) {
@@ -552,9 +333,7 @@
             .stat-card { padding: 16px; }
             .stat-icon { font-size: 20px; }
             .stat-value { font-size: 20px; }
-            table { font-size: 11px; }
-            th, td { padding: 8px 4px; }
-            .quick-stats { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -567,13 +346,6 @@
             </button>
             <h1 class="header-title">🔧 Admin Dashboard</h1>
         </div>
-        <div class="header-right">
-            <div class="admin-info">
-                <div class="admin-name">Administrator</div>
-                <div class="admin-role">System Admin</div>
-            </div>
-            <div class="admin-avatar">A</div>
-        </div>
     </div>
 
     <!-- SIDEBAR OVERLAY -->
@@ -583,54 +355,22 @@
     <div class="container">
         <!-- SIDEBAR -->
         <div class="sidebar" id="sidebar">
-            <button class="sidebar-close" onclick="closeSidebar()">
-                <i class="fas fa-times"></i>
-            </button>
+            <button class="sidebar-close" onclick="closeSidebar()"><i class="fas fa-times"></i></button>
 
             <div class="nav-section-title">📊 Dashboard</div>
             <a class="nav-item active" onclick="switchPage('overview')">
-                <i class="fas fa-chart-line"></i>
-                <span>Overview</span>
+                <i class="fas fa-chart-line"></i> <span>Overview</span>
             </a>
 
             <div class="nav-section-title">👥 Management</div>
             <a class="nav-item" onclick="switchPage('users')">
-                <i class="fas fa-users"></i>
-                <span>Users</span>
+                <i class="fas fa-users"></i> <span>Users</span>
             </a>
             <a class="nav-item" onclick="switchPage('orders')">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Orders</span>
+                <i class="fas fa-shopping-cart"></i> <span>Orders</span>
             </a>
             <a class="nav-item" onclick="switchPage('payments')">
-                <i class="fas fa-credit-card"></i>
-                <span>Payments</span>
-            </a>
-            <a class="nav-item" onclick="switchPage('transactions')">
-                <i class="fas fa-money-bill-wave"></i>
-                <span>Deposits</span>
-            </a>
-
-            <div class="nav-section-title">⚙️ Configuration</div>
-            <a class="nav-item" onclick="switchPage('providers')">
-                <i class="fas fa-plug"></i>
-                <span>Service Providers</span>
-            </a>
-            <a class="nav-item" onclick="switchPage('services')">
-                <i class="fas fa-tasks"></i>
-                <span>Services</span>
-            </a>
-            <a class="nav-item" onclick="switchPage('payment-gateways')">
-                <i class="fas fa-coins"></i>
-                <span>Payment Gateways</span>
-            </a>
-            <a class="nav-item" onclick="switchPage('branding')">
-                <i class="fas fa-palette"></i>
-                <span>Branding</span>
-            </a>
-            <a class="nav-item" onclick="switchPage('settings')">
-                <i class="fas fa-cog"></i>
-                <span>Settings</span>
+                <i class="fas fa-credit-card"></i> <span>Payments</span>
             </a>
         </div>
 
@@ -639,8 +379,6 @@
             <!-- OVERVIEW -->
             <div class="tab-content active" id="overview-page">
                 <div class="page-title">Dashboard Overview</div>
-                <div id="overviewMessage" class="message"></div>
-                
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-icon">👥</div>
@@ -658,38 +396,16 @@
                         <div class="stat-label">Total Revenue</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon">💳</div>
-                        <div class="stat-value" id="totalDeposits">₦0</div>
-                        <div class="stat-label">Total Deposits</div>
-                    </div>
-                </div>
-
-                <div class="settings-card">
-                    <div class="settings-title">Quick Stats</div>
-                    <div class="quick-stats">
-                        <div class="quick-stat-box">
-                            <div class="quick-stat-label">Completed</div>
-                            <div class="quick-stat-value" id="completedOrders">0</div>
-                        </div>
-                        <div class="quick-stat-box">
-                            <div class="quick-stat-label">Pending</div>
-                            <div class="quick-stat-value" id="pendingOrders">0</div>
-                        </div>
-                        <div class="quick-stat-box">
-                            <div class="quick-stat-label">Processing</div>
-                            <div class="quick-stat-value" id="processingOrders">0</div>
-                        </div>
-                        <div class="quick-stat-box">
-                            <div class="quick-stat-label">Avg Order</div>
-                            <div class="quick-stat-value" id="avgOrderValue">₦0</div>
-                        </div>
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-value" id="completedOrders">0</div>
+                        <div class="stat-label">Completed Orders</div>
                     </div>
                 </div>
             </div>
 
             <!-- USERS -->
             <div class="tab-content" id="users-page">
-                <div class="page-title">Users Management</div>
+                <div class="page-title">Users</div>
                 <div id="usersMessage" class="message"></div>
                 <div class="search-filter">
                     <input type="text" class="search-input" id="userSearch" placeholder="Search users...">
@@ -705,13 +421,12 @@
                                     <th>Phone</th>
                                     <th>Country</th>
                                     <th>Balance</th>
-                                    <th>Join Date</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="usersTable">
-                                <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading users...</td></tr>
+                                <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -731,10 +446,10 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Order ID</th>
                                     <th>User</th>
                                     <th>Service</th>
-                                    <th>Qty</th>
+                                    <th>Quantity</th>
                                     <th>Price</th>
                                     <th>Status</th>
                                     <th>Date</th>
@@ -742,19 +457,19 @@
                                 </tr>
                             </thead>
                             <tbody id="ordersTable">
-                                <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading orders...</td></tr>
+                                <tr><td colspan="8" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- PAYMENTS (User Wallets) -->
+            <!-- PAYMENTS -->
             <div class="tab-content" id="payments-page">
                 <div class="page-title">Payments & Wallets</div>
                 <div id="paymentsMessage" class="message"></div>
                 <div class="search-filter">
-                    <input type="text" class="search-input" id="paymentSearch" placeholder="Search payments...">
+                    <input type="text" class="search-input" id="paymentSearch" placeholder="Search wallets...">
                     <button class="btn btn-primary" onclick="exportPaymentsData()"><i class="fas fa-download"></i> Export</button>
                 </div>
                 <div class="table-wrapper">
@@ -765,152 +480,17 @@
                                     <th>Username</th>
                                     <th>Email</th>
                                     <th>Balance</th>
-                                    <th>Deposits</th>
                                     <th>Spent</th>
+                                    <th>Total Topup</th>
                                     <th>Last Updated</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="paymentsTable">
-                                <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading payments...</td></tr>
+                                <tr><td colspan="7" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-
-            <!-- TRANSACTIONS/DEPOSITS -->
-            <div class="tab-content" id="transactions-page">
-                <div class="page-title">User Deposits & Transactions</div>
-                <div id="transactionsMessage" class="message"></div>
-                <div class="search-filter">
-                    <input type="text" class="search-input" id="transactionSearch" placeholder="Search by user...">
-                    <button class="btn btn-primary" onclick="exportTransactionsData()"><i class="fas fa-download"></i> Export</button>
-                </div>
-                <div class="table-wrapper">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>User</th>
-                                    <th>Email</th>
-                                    <th>Amount</th>
-                                    <th>Reference</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transactionsTable">
-                                <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading deposits...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SERVICE PROVIDERS -->
-            <div class="tab-content" id="providers-page">
-                <div class="page-title">Service Providers</div>
-                <div id="providersMessage" class="message"></div>
-                <button class="btn btn-primary" onclick="openAddProviderModal()" style="margin-bottom: 20px;"><i class="fas fa-plus"></i> Add Provider</button>
-                <div class="table-wrapper">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr><th>Name</th><th>API URL</th><th>Auth</th><th>Status</th><th>Services</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody id="providersTable"><tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- SERVICES -->
-            <div class="tab-content" id="services-page">
-                <div class="page-title">Services Catalog</div>
-                <div id="servicesMessage" class="message"></div>
-                <div class="search-filter">
-                    <input type="text" class="search-input" id="serviceSearch" placeholder="Search services...">
-                </div>
-                <div class="table-wrapper">
-                    <div class="table-container">
-                        <table>
-                            <thead>
-                                <tr><th>Name</th><th>Platform</th><th>Price</th><th>Provider</th><th>Category</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody id="servicesTable"><tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAYMENT GATEWAYS -->
-            <div class="tab-content" id="payment-gateways-page">
-                <div class="page-title">Payment Gateways</div>
-                <div id="gatewayMessage" class="message"></div>
-                <div class="settings-card">
-                    <div class="settings-title"><i class="fas fa-credit-card"></i> Active Gateway</div>
-                    <div class="form-group">
-                        <label class="form-label">Select Gateway</label>
-                        <select class="form-select" id="activeGateway">
-                            <option value="korapay">Korapay</option>
-                            <option value="paystack">Paystack</option>
-                            <option value="flutterwave">Flutterwave</option>
-                        </select>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Public Key</label>
-                            <input type="text" class="form-input" id="gatewayPublicKey" placeholder="pk_test_xxxxx">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Secret Key</label>
-                            <input type="password" class="form-input" id="gatewaySecretKey" placeholder="sk_test_xxxxx">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="savePaymentGateway()"><i class="fas fa-save"></i> Save</button>
-                </div>
-            </div>
-
-            <!-- BRANDING -->
-            <div class="tab-content" id="branding-page">
-                <div class="page-title">Site Branding</div>
-                <div id="brandingMessage" class="message"></div>
-                <div class="settings-card">
-                    <div class="settings-title"><i class="fas fa-image"></i> Branding Settings</div>
-                    <div class="form-group">
-                        <label class="form-label">Site Name</label>
-                        <input type="text" class="form-input" id="siteName" placeholder="UpSocial">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Site Tagline</label>
-                        <input type="text" class="form-input" id="siteTagline" placeholder="Nigeria's social media solution">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label class="form-label">Primary Color</label>
-                            <input type="color" class="form-input" id="primaryColor" value="#3CB371">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Secondary Color</label>
-                            <input type="color" class="form-input" id="secondaryColor" value="#2d9a5f">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="saveBranding()"><i class="fas fa-save"></i> Save</button>
-                </div>
-            </div>
-
-            <!-- SETTINGS -->
-            <div class="tab-content" id="settings-page">
-                <div class="page-title">System Settings</div>
-                <div id="settingsMessage" class="message"></div>
-                <div class="settings-card">
-                    <div class="settings-title"><i class="fas fa-database"></i> API Configuration</div>
-                    <div class="form-group">
-                        <label class="form-label">API Base URL</label>
-                        <input type="text" class="form-input" id="apiBaseUrl" placeholder="https://your-api.com/api">
-                    </div>
-                    <button class="btn btn-primary" onclick="saveAPIConfig()"><i class="fas fa-save"></i> Save</button>
                 </div>
             </div>
         </div>
@@ -926,7 +506,7 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Username</label>
-                <input type="text" class="form-input" id="editUsername" placeholder="Username">
+                <input type="text" class="form-input" id="editUsername">
             </div>
             <div class="form-group">
                 <label class="form-label">Email</label>
@@ -934,24 +514,24 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Phone</label>
-                <input type="text" class="form-input" id="editUserPhone" placeholder="Phone number">
+                <input type="text" class="form-input" id="editUserPhone">
             </div>
             <div class="form-group">
                 <label class="form-label">Country</label>
-                <input type="text" class="form-input" id="editUserCountry" placeholder="Country">
+                <input type="text" class="form-input" id="editUserCountry">
             </div>
             <div class="form-group">
-                <label class="form-label">Wallet Balance (₦)</label>
-                <input type="number" class="form-input" id="editUserBalance" placeholder="0.00" step="0.01">
+                <label class="form-label">Balance (₦)</label>
+                <input type="number" class="form-input" id="editUserBalance" step="0.01">
             </div>
             <div class="form-row">
-                <button class="btn btn-primary" onclick="saveUserChanges()">Save Changes</button>
-                <button class="btn btn-secondary" onclick="closeModal('editUserModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveUserChanges()">Save</button>
+                <button class="btn btn-primary" style="background: #f5f7fa; color: #0a0e27; box-shadow: none;" onclick="closeModal('editUserModal')">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Update Order Modal -->
+    <!-- Update Order Status Modal -->
     <div class="modal" id="updateOrderModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -964,69 +544,51 @@
             </div>
             <div class="form-group">
                 <label class="form-label">New Status</label>
-                <select class="form-select" id="newOrderStatus">
+                <select class="form-input" id="newOrderStatus">
                     <option value="pending">Pending</option>
                     <option value="processing">Processing</option>
-                    <option value="in_progress">In Progress</option>
                     <option value="completed">Completed</option>
                     <option value="cancelled">Cancelled</option>
                 </select>
             </div>
             <div class="form-row">
                 <button class="btn btn-primary" onclick="saveOrderStatus()">Update</button>
-                <button class="btn btn-secondary" onclick="closeModal('updateOrderModal')">Cancel</button>
+                <button class="btn btn-primary" style="background: #f5f7fa; color: #0a0e27; box-shadow: none;" onclick="closeModal('updateOrderModal')">Cancel</button>
             </div>
         </div>
     </div>
 
-    <!-- Add Provider Modal -->
-    <div class="modal" id="addProviderModal">
+    <!-- Update Balance Modal -->
+    <div class="modal" id="updateBalanceModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Add Service Provider</h3>
-                <button class="modal-close" onclick="closeModal('addProviderModal')">×</button>
+                <h3 class="modal-title">Update User Balance</h3>
+                <button class="modal-close" onclick="closeModal('updateBalanceModal')">×</button>
             </div>
             <div class="form-group">
-                <label class="form-label">Provider Name</label>
-                <input type="text" class="form-input" id="providerName" placeholder="BovaSMM">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-input" id="balanceUserEmail" disabled>
             </div>
             <div class="form-group">
-                <label class="form-label">API URL</label>
-                <input type="url" class="form-input" id="providerUrl" placeholder="https://api.example.com">
-            </div>
-            <div class="form-group">
-                <label class="form-label">API Key</label>
-                <input type="password" class="form-input" id="providerKey" placeholder="Your API key">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Auth Method</label>
-                <select class="form-select" id="authMethod">
-                    <option value="query">Query Parameter</option>
-                    <option value="header">Bearer Token</option>
-                    <option value="header-key">X-API-Key Header</option>
-                </select>
+                <label class="form-label">New Balance (₦)</label>
+                <input type="number" class="form-input" id="newBalance" step="0.01" placeholder="0.00">
             </div>
             <div class="form-row">
-                <button class="btn btn-primary" onclick="addProvider()">Add</button>
-                <button class="btn btn-secondary" onclick="closeModal('addProviderModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveUserBalance()">Update</button>
+                <button class="btn btn-primary" style="background: #f5f7fa; color: #0a0e27; box-shadow: none;" onclick="closeModal('updateBalanceModal')">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== API CONFIGURATION =====
-        let API_URL = localStorage.getItem('adminApiBaseUrl') || 'https://upsocial-api.onrender.com/api';
+        const API_URL = 'https://upsocial-api.onrender.com/api';
 
         let editingUserEmail = null;
         let editingOrderId = null;
-        let editingOrderEmail = null;
         let allUsers = [];
         let allOrders = [];
         let allPayments = [];
-        let allTransactions = [];
-        let allServices = [];
 
-        // ===== SIDEBAR & NAVIGATION =====
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('active');
             document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -1048,76 +610,53 @@
             else if (page === 'users') loadUsers();
             else if (page === 'orders') loadOrders();
             else if (page === 'payments') loadPayments();
-            else if (page === 'transactions') loadTransactions();
-            else if (page === 'providers') loadProviders();
-            else if (page === 'services') loadServices();
-            else if (page === 'payment-gateways') loadPaymentGateways();
-            else if (page === 'branding') loadBrandingSettings();
-            else if (page === 'settings') loadSystemSettings();
         }
 
-        // ===== INITIALIZATION =====
         window.addEventListener('load', () => {
-            loadAdminDashboard();
+            loadOverviewStats();
         });
 
-        function loadAdminDashboard() {
-            loadOverviewStats();
-        }
-
-        // ===== OVERVIEW STATISTICS =====
         async function loadOverviewStats() {
             try {
-                const response = await fetch(API_URL + '/admin/stats');
-                if (!response.ok) throw new Error('Failed to load stats');
+                const response = await fetch(`${API_URL}/admin/stats`);
+                const data = await response.json();
                 
-                const stats = await response.json();
-                document.getElementById('totalUsers').textContent = stats.total_users || 0;
-                document.getElementById('totalOrders').textContent = stats.total_orders || 0;
-                document.getElementById('totalRevenue').textContent = '₦' + (stats.total_revenue || 0).toFixed(2);
-                document.getElementById('totalDeposits').textContent = '₦' + (stats.total_deposits || 0).toFixed(2);
-                document.getElementById('completedOrders').textContent = stats.completed_orders || 0;
-                document.getElementById('pendingOrders').textContent = stats.pending_orders || 0;
-                document.getElementById('processingOrders').textContent = stats.processing_orders || 0;
-                document.getElementById('avgOrderValue').textContent = '₦' + (stats.avg_order_value || 0).toFixed(2);
+                document.getElementById('totalUsers').textContent = data.total_users || 0;
+                document.getElementById('totalOrders').textContent = data.total_orders || 0;
+                document.getElementById('totalRevenue').textContent = '₦' + (data.total_revenue || 0).toFixed(2);
+                document.getElementById('completedOrders').textContent = data.completed_orders || 0;
             } catch (error) {
-                console.error('Error loading stats:', error);
-                showMessage('overviewMessage', '❌ Error loading stats: ' + error.message, 'error');
+                console.error('Error:', error);
             }
         }
 
-        // ===== USERS MANAGEMENT =====
         async function loadUsers() {
             try {
-                const response = await fetch(API_URL + '/admin/users');
-                if (!response.ok) throw new Error('Failed to load users');
-                
-                const users = await response.json();
-                allUsers = Array.isArray(users) ? users : [];
-                
+                const response = await fetch(`${API_URL}/admin/users`);
+                const data = await response.json();
+                allUsers = data;
+
                 const tbody = document.getElementById('usersTable');
-                tbody.innerHTML = allUsers.length === 0 
-                    ? '<tr><td colspan="8" style="text-align: center;">No users found</td></tr>'
-                    : allUsers.map(user => `
+                tbody.innerHTML = data.length === 0 
+                    ? '<tr><td colspan="7" style="text-align: center;">No users found</td></tr>'
+                    : data.map(user => `
                         <tr>
                             <td><strong>${user.username || 'N/A'}</strong></td>
                             <td>${user.email || 'N/A'}</td>
                             <td>${user.phone || '-'}</td>
                             <td>${user.country || '-'}</td>
                             <td>₦${(user.balance || 0).toFixed(2)}</td>
-                            <td>${user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}</td>
                             <td><span class="status-badge status-active">Active</span></td>
                             <td>
                                 <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="openEditUserModal('${user.email}', '${user.username}', '${user.phone || ''}', '${user.country || ''}', ${user.balance || 0})">Edit</button>
-                                    <button class="action-btn btn-delete" onclick="deleteUser('${user.email}')">Delete</button>
+                                    <button class="action-btn btn-edit" onclick="openEditUserModal('${user.email}', '${user.username}', '${user.phone || ''}', '${user.country || ''}', ${user.balance})">Edit</button>
+                                    <button class="action-btn btn-delete" onclick="deleteUser(${user.id})">Delete</button>
                                 </div>
                             </td>
                         </tr>
                     `).join('');
             } catch (error) {
-                console.error('Error loading users:', error);
-                document.getElementById('usersTable').innerHTML = `<tr><td colspan="8" style="text-align: center;">❌ ${error.message}</td></tr>`;
+                document.getElementById('usersTable').innerHTML = `<tr><td colspan="7" style="text-align: center;">❌ Error: ${error.message}</td></tr>`;
             }
         }
 
@@ -1137,45 +676,37 @@
             const username = document.getElementById('editUsername').value.trim();
             const phone = document.getElementById('editUserPhone').value.trim();
             const country = document.getElementById('editUserCountry').value.trim();
-            const balance = parseFloat(document.getElementById('editUserBalance').value);
 
             if (!username) {
                 showMessage('usersMessage', '❌ Username cannot be empty', 'error');
                 return;
             }
 
-            if (isNaN(balance) || balance < 0) {
-                showMessage('usersMessage', '❌ Invalid balance', 'error');
-                return;
-            }
-
             try {
-                const response = await fetch(API_URL + '/admin/users/' + editingUserEmail, {
+                // Update user profile
+                await fetch(`${API_URL}/user/profile`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, phone, country, balance })
+                    body: JSON.stringify({ username, phone, country })
                 });
-
-                if (!response.ok) throw new Error('Failed to update user');
 
                 closeModal('editUserModal');
                 showMessage('usersMessage', '✅ User updated!', 'success');
                 loadUsers();
-                loadOverviewStats();
             } catch (error) {
                 showMessage('usersMessage', '❌ Error: ' + error.message, 'error');
             }
         }
 
-        async function deleteUser(email) {
+        async function deleteUser(userId) {
             if (!confirm('Delete this user?')) return;
 
             try {
-                const response = await fetch(API_URL + '/admin/users/' + email, {
+                const response = await fetch(`${API_URL}/admin/users/${userId}`, {
                     method: 'DELETE'
                 });
 
-                if (!response.ok) throw new Error('Failed to delete user');
+                if (!response.ok) throw new Error('Failed to delete');
 
                 showMessage('usersMessage', '✅ User deleted!', 'success');
                 loadUsers();
@@ -1185,55 +716,50 @@
             }
         }
 
-        // ===== ORDERS MANAGEMENT =====
         async function loadOrders() {
             try {
-                const response = await fetch(API_URL + '/admin/orders');
-                if (!response.ok) throw new Error('Failed to load orders');
-                
-                const orders = await response.json();
-                allOrders = Array.isArray(orders) ? orders : [];
-                
+                const response = await fetch(`${API_URL}/admin/orders`);
+                const data = await response.json();
+                allOrders = data;
+
                 const tbody = document.getElementById('ordersTable');
-                tbody.innerHTML = allOrders.length === 0 
+                tbody.innerHTML = data.length === 0 
                     ? '<tr><td colspan="8" style="text-align: center;">No orders found</td></tr>'
-                    : allOrders.map(order => `
+                    : data.map(order => `
                         <tr>
-                            <td><strong>#${order.id || 'N/A'}</strong></td>
-                            <td>${order.user_email || 'N/A'}</td>
-                            <td>${order.service_name || 'N/A'}</td>
-                            <td>${order.quantity || 0}</td>
+                            <td><strong>#${order.id}</strong></td>
+                            <td>${order.username}</td>
+                            <td>${order.service}</td>
+                            <td>${order.quantity}</td>
                             <td>₦${(order.price || 0).toFixed(2)}</td>
-                            <td><span class="status-badge status-${order.status || 'pending'}">${(order.status || 'pending').toUpperCase()}</span></td>
-                            <td>${order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}</td>
-                            <td><button class="action-btn btn-edit" onclick="openUpdateOrderModal('${order.id}', '${order.status || 'pending'}', '${order.user_email}')">Update</button></td>
+                            <td><span class="status-badge status-${order.status}">${order.status.toUpperCase()}</span></td>
+                            <td>${new Date(order.created_at).toLocaleDateString()}</td>
+                            <td><button class="action-btn btn-edit" onclick="openUpdateOrderModal(${order.id}, '${order.status}')">Update</button></td>
                         </tr>
                     `).join('');
             } catch (error) {
-                console.error('Error loading orders:', error);
-                document.getElementById('ordersTable').innerHTML = `<tr><td colspan="8" style="text-align: center;">❌ ${error.message}</td></tr>`;
+                document.getElementById('ordersTable').innerHTML = `<tr><td colspan="8" style="text-align: center;">❌ Error: ${error.message}</td></tr>`;
             }
         }
 
-        function openUpdateOrderModal(orderId, currentStatus, email) {
+        function openUpdateOrderModal(orderId, status) {
             editingOrderId = orderId;
-            editingOrderEmail = email;
             document.getElementById('updateOrderId').value = orderId;
-            document.getElementById('newOrderStatus').value = currentStatus;
+            document.getElementById('newOrderStatus').value = status;
             document.getElementById('updateOrderModal').classList.add('active');
         }
 
         async function saveOrderStatus() {
-            const newStatus = document.getElementById('newOrderStatus').value;
+            const status = document.getElementById('newOrderStatus').value;
 
             try {
-                const response = await fetch(API_URL + '/admin/orders/' + editingOrderId, {
-                    method: 'PUT',
+                const response = await fetch(`${API_URL}/admin/orders/status`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ status: newStatus })
+                    body: JSON.stringify({ orderId: editingOrderId, status })
                 });
 
-                if (!response.ok) throw new Error('Failed to update order');
+                if (!response.ok) throw new Error('Failed to update');
 
                 closeModal('updateOrderModal');
                 showMessage('ordersMessage', '✅ Order updated!', 'success');
@@ -1244,61 +770,56 @@
             }
         }
 
-        // ===== PAYMENTS/WALLETS =====
         async function loadPayments() {
             try {
-                const response = await fetch(API_URL + '/admin/wallets');
-                if (!response.ok) throw new Error('Failed to load wallets');
-                
-                const wallets = await response.json();
-                allPayments = Array.isArray(wallets) ? wallets : [];
-                
+                const response = await fetch(`${API_URL}/admin/wallets`);
+                const data = await response.json();
+                allPayments = data;
+
                 const tbody = document.getElementById('paymentsTable');
-                tbody.innerHTML = allPayments.length === 0 
+                tbody.innerHTML = data.length === 0 
                     ? '<tr><td colspan="7" style="text-align: center;">No wallets found</td></tr>'
-                    : allPayments.map(wallet => `
+                    : data.map(wallet => `
                         <tr>
-                            <td><strong>${wallet.username || 'N/A'}</strong></td>
-                            <td>${wallet.email || wallet.user_email || 'N/A'}</td>
+                            <td><strong>${wallet.username}</strong></td>
+                            <td>${wallet.email}</td>
                             <td>₦${(wallet.balance || 0).toFixed(2)}</td>
-                            <td>₦${(wallet.total_deposits || 0).toFixed(2)}</td>
-                            <td>₦${(wallet.total_spent || 0).toFixed(2)}</td>
-                            <td>${wallet.updated_at ? new Date(wallet.updated_at).toLocaleDateString() : 'Never'}</td>
-                            <td><button class="action-btn btn-edit" onclick="openEditBalanceModal('${wallet.email || wallet.user_email}', '${wallet.username}', ${wallet.balance || 0})">Adjust</button></td>
+                            <td>₦${(wallet.spent || 0).toFixed(2)}</td>
+                            <td>₦${(wallet.total_topup || 0).toFixed(2)}</td>
+                            <td>${new Date(wallet.updated_at).toLocaleDateString()}</td>
+                            <td><button class="action-btn btn-edit" onclick="openUpdateBalanceModal('${wallet.email}')">Update Balance</button></td>
                         </tr>
                     `).join('');
             } catch (error) {
-                console.error('Error loading wallets:', error);
-                document.getElementById('paymentsTable').innerHTML = `<tr><td colspan="7" style="text-align: center;">❌ ${error.message}</td></tr>`;
+                document.getElementById('paymentsTable').innerHTML = `<tr><td colspan="7" style="text-align: center;">❌ Error: ${error.message}</td></tr>`;
             }
         }
 
-        function openEditBalanceModal(email, username, balance) {
+        function openUpdateBalanceModal(email) {
             editingUserEmail = email;
-            document.getElementById('balanceUsername').value = username;
-            document.getElementById('currentBalance').value = '₦' + balance.toFixed(2);
+            document.getElementById('balanceUserEmail').value = email;
             document.getElementById('newBalance').value = '';
-            document.getElementById('editBalanceModal').classList.add('active');
+            document.getElementById('updateBalanceModal').classList.add('active');
         }
 
-        async function saveBalance() {
-            const newBalance = parseFloat(document.getElementById('newBalance').value);
-            
-            if (isNaN(newBalance) || newBalance < 0) {
-                showMessage('paymentsMessage', '❌ Invalid amount', 'error');
+        async function saveUserBalance() {
+            const balance = parseFloat(document.getElementById('newBalance').value);
+
+            if (isNaN(balance) || balance < 0) {
+                showMessage('paymentsMessage', '❌ Invalid balance', 'error');
                 return;
             }
 
             try {
-                const response = await fetch(API_URL + '/admin/wallets/' + editingUserEmail, {
-                    method: 'PUT',
+                const response = await fetch(`${API_URL}/admin/users/balance`, {
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ balance: newBalance })
+                    body: JSON.stringify({ email: editingUserEmail, balance })
                 });
 
-                if (!response.ok) throw new Error('Failed to update balance');
+                if (!response.ok) throw new Error('Failed to update');
 
-                closeModal('editBalanceModal');
+                closeModal('updateBalanceModal');
                 showMessage('paymentsMessage', '✅ Balance updated!', 'success');
                 loadPayments();
                 loadOverviewStats();
@@ -1307,240 +828,6 @@
             }
         }
 
-        // ===== TRANSACTIONS/DEPOSITS =====
-        async function loadTransactions() {
-            try {
-                const response = await fetch(API_URL + '/admin/transactions');
-                if (!response.ok) throw new Error('Failed to load transactions');
-                
-                const transactions = await response.json();
-                allTransactions = Array.isArray(transactions) ? transactions : [];
-                
-                const tbody = document.getElementById('transactionsTable');
-                tbody.innerHTML = allTransactions.length === 0 
-                    ? '<tr><td colspan="6" style="text-align: center;">No deposits found</td></tr>'
-                    : allTransactions.map(trans => `
-                        <tr>
-                            <td><strong>${trans.username || 'N/A'}</strong></td>
-                            <td>${trans.email || trans.user_email || 'N/A'}</td>
-                            <td>₦${(trans.amount || 0).toFixed(2)}</td>
-                            <td>${trans.reference || 'N/A'}</td>
-                            <td>${trans.created_at ? new Date(trans.created_at).toLocaleDateString() : 'N/A'}</td>
-                            <td><span class="status-badge status-completed">${trans.status || 'Success'}</span></td>
-                        </tr>
-                    `).join('');
-            } catch (error) {
-                console.error('Error loading transactions:', error);
-                document.getElementById('transactionsTable').innerHTML = `<tr><td colspan="6" style="text-align: center;">❌ ${error.message}</td></tr>`;
-            }
-        }
-
-        // ===== SERVICE PROVIDERS =====
-        async function loadProviders() {
-            try {
-                const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
-                const tbody = document.getElementById('providersTable');
-                
-                tbody.innerHTML = providers.length === 0 
-                    ? '<tr><td colspan="6" style="text-align: center;">No providers configured</td></tr>'
-                    : providers.map((p, idx) => `
-                        <tr>
-                            <td><strong>${p.name}</strong></td>
-                            <td><small>${p.url}</small></td>
-                            <td><span class="status-badge" style="background: #f3f4f6; color: #4b5563;">${p.authMethod || 'query'}</span></td>
-                            <td><span class="status-badge status-active">Active</span></td>
-                            <td>${p.servicesCount || 0}</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="action-btn btn-edit" onclick="importServices(${idx}, '${p.name}')">Import</button>
-                                    <button class="action-btn btn-delete" onclick="removeProvider(${idx})">Delete</button>
-                                </div>
-                            </td>
-                        </tr>
-                    `).join('');
-            } catch (error) {
-                document.getElementById('providersTable').innerHTML = `<tr><td colspan="6" style="text-align: center;">❌ Error loading providers</td></tr>`;
-            }
-        }
-
-        function openAddProviderModal() {
-            document.getElementById('providerName').value = '';
-            document.getElementById('providerUrl').value = '';
-            document.getElementById('providerKey').value = '';
-            document.getElementById('addProviderModal').classList.add('active');
-        }
-
-        function addProvider() {
-            const name = document.getElementById('providerName').value.trim();
-            const url = document.getElementById('providerUrl').value.trim();
-            const key = document.getElementById('providerKey').value.trim();
-            const authMethod = document.getElementById('authMethod').value;
-
-            if (!name || !url || !key) {
-                showMessage('providersMessage', '❌ Fill all fields', 'error');
-                return;
-            }
-
-            const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
-            providers.push({ name, url, key, authMethod, servicesCount: 0 });
-            localStorage.setItem('upsocial_serviceProviders', JSON.stringify(providers));
-
-            closeModal('addProviderModal');
-            loadProviders();
-            showMessage('providersMessage', '✅ Provider added!', 'success');
-        }
-
-        function removeProvider(index) {
-            if (confirm('Remove this provider?')) {
-                const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
-                providers.splice(index, 1);
-                localStorage.setItem('upsocial_serviceProviders', JSON.stringify(providers));
-                loadProviders();
-            }
-        }
-
-        function importServices(index, providerName) {
-            const providers = JSON.parse(localStorage.getItem('upsocial_serviceProviders') || '[]');
-            const provider = providers[index];
-
-            if (!provider) {
-                showMessage('providersMessage', '❌ Provider not found', 'error');
-                return;
-            }
-
-            showMessage('providersMessage', '⏳ Importing...', 'success');
-
-            let apiUrl = provider.url;
-            const authMethod = provider.authMethod || 'query';
-
-            if (authMethod === 'query') {
-                apiUrl += (apiUrl.includes('?') ? '&' : '?') + 'api_key=' + provider.key;
-            }
-
-            fetch(apiUrl, {
-                method: 'GET',
-                headers: authMethod === 'header' ? {'Authorization': 'Bearer ' + provider.key} 
-                    : authMethod === 'header-key' ? {'X-API-Key': provider.key} : {}
-            })
-            .then(response => response.json())
-            .then(data => {
-                let services = Array.isArray(data) ? data : data.services || data.data || [];
-
-                if (services.length === 0) {
-                    showMessage('providersMessage', '⚠️ No services found', 'error');
-                    return;
-                }
-
-                const formattedServices = services.map((s, idx) => ({
-                    id: s.service || s.id || (idx + 1),
-                    name: s.name || s.service_name || 'Service ' + (idx + 1),
-                    platform: 'Social Media',
-                    price: parseFloat(s.rate || s.price || 0),
-                    provider: providerName,
-                    category: s.category || s.type || 'General'
-                }));
-
-                localStorage.setItem('upsocial_services', JSON.stringify(formattedServices));
-                provider.servicesCount = formattedServices.length;
-                providers[index] = provider;
-                localStorage.setItem('upsocial_serviceProviders', JSON.stringify(providers));
-
-                showMessage('providersMessage', '✅ Imported ' + formattedServices.length + ' services!', 'success');
-                loadProviders();
-            })
-            .catch(error => {
-                showMessage('providersMessage', '❌ Import failed', 'error');
-            });
-        }
-
-        // ===== SERVICES =====
-        async function loadServices() {
-            try {
-                const services = JSON.parse(localStorage.getItem('upsocial_services') || '[]');
-                allServices = services;
-                
-                const tbody = document.getElementById('servicesTable');
-                tbody.innerHTML = services.length === 0 
-                    ? '<tr><td colspan="6" style="text-align: center;">No services found</td></tr>'
-                    : services.map(s => `
-                        <tr>
-                            <td><strong>${s.name || 'N/A'}</strong></td>
-                            <td>${s.platform || 'N/A'}</td>
-                            <td>₦${(s.price || 0).toFixed(2)}</td>
-                            <td>${s.provider || 'N/A'}</td>
-                            <td>${s.category || 'N/A'}</td>
-                            <td><button class="action-btn btn-delete" onclick="deleteService('${s.id}')">Delete</button></td>
-                        </tr>
-                    `).join('');
-            } catch (error) {
-                document.getElementById('servicesTable').innerHTML = `<tr><td colspan="6" style="text-align: center;">❌ Error loading services</td></tr>`;
-            }
-        }
-
-        function deleteService(id) {
-            if (confirm('Delete this service?')) {
-                const services = JSON.parse(localStorage.getItem('upsocial_services') || '[]');
-                const filtered = services.filter(s => s.id != id);
-                localStorage.setItem('upsocial_services', JSON.stringify(filtered));
-                loadServices();
-            }
-        }
-
-        // ===== PAYMENT GATEWAYS =====
-        function loadPaymentGateways() {
-            document.getElementById('activeGateway').value = localStorage.getItem('upsocial_paymentGateway') || 'korapay';
-            document.getElementById('gatewayPublicKey').value = localStorage.getItem('upsocial_gatewayKey') || '';
-            document.getElementById('gatewaySecretKey').value = localStorage.getItem('upsocial_gatewaySecret') || '';
-        }
-
-        function savePaymentGateway() {
-            const publicKey = document.getElementById('gatewayPublicKey').value.trim();
-            const secretKey = document.getElementById('gatewaySecretKey').value.trim();
-
-            if (!publicKey || !secretKey) {
-                showMessage('gatewayMessage', '❌ Fill all fields', 'error');
-                return;
-            }
-
-            localStorage.setItem('upsocial_paymentGateway', document.getElementById('activeGateway').value);
-            localStorage.setItem('upsocial_gatewayKey', publicKey);
-            localStorage.setItem('upsocial_gatewaySecret', secretKey);
-            showMessage('gatewayMessage', '✅ Payment gateway updated!', 'success');
-        }
-
-        // ===== BRANDING =====
-        function loadBrandingSettings() {
-            document.getElementById('siteName').value = localStorage.getItem('upsocial_siteName') || 'UpSocial';
-            document.getElementById('siteTagline').value = localStorage.getItem('upsocial_siteTagline') || "Nigeria's social media solution";
-            document.getElementById('primaryColor').value = localStorage.getItem('upsocial_primaryColor') || '#3CB371';
-            document.getElementById('secondaryColor').value = localStorage.getItem('upsocial_secondaryColor') || '#2d9a5f';
-        }
-
-        function saveBranding() {
-            localStorage.setItem('upsocial_siteName', document.getElementById('siteName').value);
-            localStorage.setItem('upsocial_siteTagline', document.getElementById('siteTagline').value);
-            localStorage.setItem('upsocial_primaryColor', document.getElementById('primaryColor').value);
-            localStorage.setItem('upsocial_secondaryColor', document.getElementById('secondaryColor').value);
-            showMessage('brandingMessage', '✅ Branding updated!', 'success');
-        }
-
-        // ===== SETTINGS =====
-        function loadSystemSettings() {
-            document.getElementById('apiBaseUrl').value = localStorage.getItem('adminApiBaseUrl') || 'https://upsocial-api.onrender.com/api';
-        }
-
-        function saveAPIConfig() {
-            const apiUrl = document.getElementById('apiBaseUrl').value.trim();
-            if (!apiUrl) {
-                showMessage('settingsMessage', '❌ API URL cannot be empty', 'error');
-                return;
-            }
-            localStorage.setItem('adminApiBaseUrl', apiUrl);
-            API_URL = apiUrl;
-            showMessage('settingsMessage', '✅ API configuration saved!', 'success');
-        }
-
-        // ===== EXPORT FUNCTIONS =====
         function exportUsersData() {
             downloadCSV(allUsers, 'users');
         }
@@ -1553,12 +840,8 @@
             downloadCSV(allPayments, 'payments');
         }
 
-        function exportTransactionsData() {
-            downloadCSV(allTransactions, 'transactions');
-        }
-
         function downloadCSV(data, filename) {
-            if (!Array.isArray(data) || data.length === 0) {
+            if (!data || data.length === 0) {
                 alert('No data to export');
                 return;
             }
@@ -1582,7 +865,6 @@
             link.click();
         }
 
-        // ===== UTILITIES =====
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('active');
         }
@@ -1592,9 +874,7 @@
             if (element) {
                 element.textContent = message;
                 element.className = 'message show ' + type;
-                setTimeout(() => {
-                    element.classList.remove('show');
-                }, 3000);
+                setTimeout(() => element.classList.remove('show'), 3000);
             }
         }
     </script>
