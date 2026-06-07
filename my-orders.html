@@ -587,9 +587,19 @@
     </div>
 
     <script>
+        const API_URL = 'https://upsocial-api.onrender.com/api';
+
         let allOrders = [];
         let currentFilter = 'all';
         let selectedOrder = null;
+
+        function getHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': 'Bearer ' + token })
+            };
+        }
 
         // Initialize
         window.addEventListener('load', function() {
@@ -605,23 +615,49 @@
             }
         }
 
-        function loadOrders() {
-            const userEmail = localStorage.getItem('upsocial_currentUser');
-            const ordersData = localStorage.getItem('upsocial_userOrders_' + userEmail);
-            
-            if (!ordersData) {
-                allOrders = [];
-            } else {
-                allOrders = JSON.parse(ordersData);
-            }
+        async function loadOrders() {
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '<div class="loading" style="padding: 40px; text-align: center; color: #3CB371;">Loading orders...</div>';
 
-            renderOrders();
+            try {
+                const response = await fetch(API_URL + '/orders', {
+                    headers: getHeaders()
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        localStorage.clear();
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    throw new Error('Failed to load orders');
+                }
+
+                const orders = await response.json();
+
+                // Map API response to our format
+                allOrders = orders.map(order => ({
+                    id: 'ORD-' + order.id,
+                    service: order.service || 'Unknown Service',
+                    platform: order.platform || 'N/A',
+                    target: order.link || 'N/A',
+                    quantity: order.quantity || 0,
+                    price: parseFloat(order.price || 0),
+                    status: order.status || 'pending',
+                    date: new Date(order.created_at).toLocaleDateString(),
+                    time: new Date(order.created_at).toLocaleTimeString()
+                }));
+
+                renderOrders();
+            } catch (err) {
+                console.error('Error loading orders:', err);
+                ordersList.innerHTML = '<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-title">Error Loading Orders</div><div class="empty-text">' + err.message + '</div></div>';
+            }
         }
 
         function filterOrders(filter) {
             currentFilter = filter;
-            
-            // Update active button
+
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
@@ -649,16 +685,16 @@
             }
 
             emptyState.style.display = 'none';
-            
-            ordersList.innerHTML = filtered.map(order => `
-                <div class="order-card" onclick="openOrderDetail(${filtered.indexOf(order)})">
+
+            ordersList.innerHTML = filtered.map((order, index) => `
+                <div class="order-card" onclick="openOrderDetail(${index})">
                     <div class="order-header">
                         <div class="order-id">${order.id}</div>
                         <div class="order-status status-${order.status}">
                             ${capitalizeStatus(order.status)}
                         </div>
                     </div>
-                    
+
                     <div class="order-info">
                         <div class="info-item">
                             <div class="info-label">Service</div>
@@ -680,7 +716,7 @@
 
                     <div class="order-footer">
                         <div class="order-date">${order.date} ${order.time || ''}</div>
-                        <div class="order-price">₦${order.price.toFixed(2)}</div>
+                        <div class="order-price">&#8358;${order.price.toFixed(2)}</div>
                     </div>
                 </div>
             `).join('');
@@ -698,7 +734,7 @@
         function openOrderDetail(index) {
             const filtered = getFilteredOrders();
             selectedOrder = filtered[index];
-            
+
             if (!selectedOrder) return;
 
             document.getElementById('modalTitle').textContent = 'Order: ' + selectedOrder.id;
@@ -707,7 +743,7 @@
             document.getElementById('detailTarget').textContent = selectedOrder.target || '-';
             document.getElementById('detailId').textContent = selectedOrder.id;
             document.getElementById('detailQuantity').textContent = selectedOrder.quantity || '-';
-            document.getElementById('detailPrice').textContent = '₦' + (selectedOrder.price || 0).toFixed(2);
+            document.getElementById('detailPrice').textContent = '&#8358;' + (selectedOrder.price || 0).toFixed(2);
             document.getElementById('detailStatus').textContent = capitalizeStatus(selectedOrder.status || 'unknown');
             document.getElementById('detailDate').textContent = selectedOrder.date || '-';
             document.getElementById('detailTime').textContent = selectedOrder.time || '-';
@@ -722,10 +758,10 @@
 
         function copyOrderId() {
             if (!selectedOrder) return;
-            
+
             const text = selectedOrder.id;
             navigator.clipboard.writeText(text).then(() => {
-                alert('✅ Order ID copied to clipboard!');
+                alert('&#9989; Order ID copied to clipboard!');
             }).catch(() => {
                 alert('Failed to copy');
             });
@@ -735,7 +771,6 @@
             window.history.back();
         }
 
-        // Close modal on outside click
         document.getElementById('orderModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
