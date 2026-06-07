@@ -908,11 +908,25 @@
             loadUserData();
         });
 
-        function checkLogin() {
+        async function checkLogin() {
             const token = localStorage.getItem('token');
             if (!token) {
                 window.location.href = 'login.html';
                 return;
+            }
+
+            try {
+                const response = await fetch(API_URL + '/wallet', {
+                    headers: getHeaders()
+                });
+
+                if (!response.ok) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (err) {
+                console.log('Offline mode - token exists');
             }
         }
 
