@@ -607,11 +607,29 @@
             loadOrders();
         });
 
-        function checkLogin() {
-            const isLoggedIn = localStorage.getItem('upsocial_loggedIn');
-            if (!isLoggedIn || isLoggedIn === 'false') {
+        async function checkLogin() {
+            const token = localStorage.getItem('token');
+            if (!token) {
                 window.location.href = 'login.html';
                 return;
+            }
+
+            // Verify token is valid by making a lightweight API call
+            try {
+                const response = await fetch(API_URL + '/wallet', {
+                    headers: getHeaders()
+                });
+
+                if (!response.ok) {
+                    // Token is invalid or expired
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (err) {
+                // Network error, but we have a token so let them stay
+                // The page will show loading errors if truly offline
+                console.log('Offline mode - token exists');
             }
         }
 
