@@ -17,6 +17,7 @@ const KORAPAY_BASE_URL = 'https://api.korapay.com/merchant/api/v1';
 app.use(cors({
   origin: [
     'https://grow-withupsocial.github.io',
+    'https://grow-withupsocial.github.io/UpSocial',
     'http://localhost:5500',
     'http://localhost:3000'
   ]
@@ -580,6 +581,46 @@ app.delete('/api/admin/users/:id', async (req, res) => {
   }
 });
 
+// ========== PASSWORD CHANGE ==========
+app.put('/api/user/password', authMiddleware, async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ error: 'Current password and new password required' });
+  }
+
+  if (newPassword.length < 6) {
+    return res.status(400).json({ error: 'Password must be at least 6 characters' });
+  }
+
+  try {
+    // Get current user
+    const userResult = await pool.query('SELECT password_hash FROM users WHERE id = $1', [req.user.id]);
+    if (userResult.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Verify current password
+    const valid = await bcrypt.compare(currentPassword, userResult.rows[0].password_hash);
+    if (!valid) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    // Hash new password
+    const newHash = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await pool.query(
+      'UPDATE users SET password_hash = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+      [newHash, req.user.id]
+    );
+
+    res.json({ success: true, message: 'Password updated successfully' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ========== ERROR HANDLING ==========
 app.use((err, req, res, next) => {
   console.error(err.stack);
@@ -589,6 +630,6 @@ app.use((err, req, res, next) => {
 // START SERVER
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`💳 Korapay Webhook URL: https://your-domain.com/api/webhook/korapay`);
+  console.log(`💳 Korapay Webhook URL: https://upsocial-api.onrender.com/api/webhook/korapay`);
 });
 
