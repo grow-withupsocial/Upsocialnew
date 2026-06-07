@@ -190,10 +190,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Protect dashboard pages
+  // Protect dashboard pages - verify token is valid
   const protectedPages = ['Dashboard.html', 'new-order.html', 'my-orders.html', 'wallet-history.html', 'profile.html'];
   const currentPage = window.location.pathname.split('/').pop();
-  if (protectedPages.includes(currentPage) && !isLoggedIn()) {
-    window.location.href = 'login.html';
+  if (protectedPages.includes(currentPage)) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'login.html';
+    }
+    // Note: Full token validation happens in each page's checkLogin()
   }
 });
+
