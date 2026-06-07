@@ -1088,5 +1088,13 @@
             if (e.target === this) closeModal();
         });
     </script>
+    <script>
+        // Load admin-set logo on all pages
+        (function loadAdminLogo() {
+            const adminLogo = localStorage.getItem('upsocial_adminLogo');
+            // This runs on page load - you can add a logo element to dashboard if needed
+            // For now the logo system is primarily for auth pages
+        })();
+    </script>
 </body>
 </html>
