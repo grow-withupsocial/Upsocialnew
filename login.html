@@ -89,14 +89,25 @@
     <script>
         const API_URL = 'https://upsocial-api.onrender.com/api';
 
+        // Load logo from admin settings or use default
         function loadLogo() {
-            const savedHeaderLogo = localStorage.getItem('upsocial_headerLogo');
-            const savedIconLogo = localStorage.getItem('upsocial_iconLogo');
-            if (savedHeaderLogo) {
-                document.getElementById('logoContainer').innerHTML = '<img src="' + savedHeaderLogo + '" alt="UpSocial" style="height: 40px; width: auto;">';
+            const adminLogo = localStorage.getItem('upsocial_adminLogo');
+            const adminIcon = localStorage.getItem('upsocial_adminIcon');
+
+            // Header logo
+            const logoContainer = document.getElementById('logoContainer');
+            if (adminLogo) {
+                logoContainer.innerHTML = '<img src="' + adminLogo + '" alt="UpSocial" style="height: 40px; width: auto; object-fit: contain;">';
+            } else {
+                logoContainer.innerHTML = 'Up<span class="highlight">Social</span>';
             }
-            if (savedIconLogo) {
-                document.getElementById('cardIcon').innerHTML = '<img src="' + savedIconLogo + '" alt="Icon" style="height: 50px; width: auto;">';
+
+            // Card icon
+            const cardIcon = document.getElementById('cardIcon');
+            if (adminIcon) {
+                cardIcon.innerHTML = '<img src="' + adminIcon + '" alt="Icon" style="height: 40px; width: 40px; object-fit: contain; border-radius: 50%;">';
+            } else {
+                cardIcon.innerHTML = '⭐'; // Star emoji
             }
         }
         loadLogo();
@@ -133,10 +144,7 @@
 
                 // Save token and user
                 localStorage.setItem('token', data.token);
-                localStorage.setItem('upsocial_user', JSON.stringify({
-                    ...data.user,
-                    joinDate: new Date().toLocaleDateString()
-                }));
+                localStorage.setItem('upsocial_user', JSON.stringify(data.user));
                 localStorage.setItem('upsocial_loggedIn', 'true');
                 localStorage.setItem('upsocial_currentUser', data.user.email);
 
