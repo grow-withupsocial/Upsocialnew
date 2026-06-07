@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Order - UpSocial</title>
+    <title>Dashboard - UpSocial</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { height: 100%; }
@@ -18,115 +19,348 @@
             flex-direction: column;
         }
         
-        /* Header */
-        .header {
-            background: white;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-bottom: 1px solid #f0f2f5;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-        
-        .header-back {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #f5f7fa;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            transition: 0.3s;
-        }
-        
-        .header-back:hover {
-            background: #e8eef7;
-        }
-        
-        .header-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #0a0e27;
-        }
-        
-        /* Main Content */
         main { 
             flex: 1;
             padding: 16px;
             max-width: 100%;
         }
         
-        /* Loading State */
-        .loading {
+        .header-section {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 28px;
+            gap: 12px;
+        }
+        
+        .greeting-section {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex: 1;
+        }
+        
+        .user-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 60px 20px;
-            text-align: center;
+            color: white;
+            font-weight: 700;
+            font-size: 22px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(60, 179, 113, 0.2);
         }
         
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f0f2f5;
-            border-top: 4px solid #3CB371;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 16px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .loading-text {
-            font-size: 14px;
+        .greeting-text h2 {
+            font-size: 13px;
+            font-weight: 400;
             color: #8892a8;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+        }
+        
+        .greeting-text p {
+            font-size: 20px;
+            font-weight: 600;
+            color: #0a0e27;
+            letter-spacing: -0.5px;
+        }
+        
+        .notification-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 2px 12px rgba(10, 14, 39, 0.08);
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: 0.3s;
+            border: 1px solid #f0f2f5;
+        }
+        
+        .notification-icon:hover {
+            box-shadow: 0 4px 16px rgba(60, 179, 113, 0.15);
+            transform: scale(1.05);
+        }
+        
+        .wallet-card {
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            border-radius: 20px;
+            padding: 28px 24px;
+            margin-bottom: 32px;
+            color: white;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            box-shadow: 0 12px 40px rgba(60, 179, 113, 0.2);
+        }
+        
+        .wallet-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        
+        .wallet-label {
+            font-size: 13px;
+            opacity: 0.92;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
             letter-spacing: 0.3px;
         }
         
-        /* Empty State */
-        .empty-state {
+        .wallet-amount {
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            line-height: 1;
+            font-family: 'Outfit', monospace;
+        }
+        
+        .wallet-right {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        
+        .wallet-history {
+            font-size: 13px;
+            cursor: pointer;
+            opacity: 0.92;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 60px 20px;
-            text-align: center;
+            gap: 6px;
+            font-weight: 500;
+            transition: 0.3s;
+            letter-spacing: 0.3px;
         }
         
-        .empty-icon {
-            font-size: 48px;
+        .wallet-history:hover {
+            opacity: 1;
+        }
+        
+        .add-money-btn {
+            background: white;
+            color: #3CB371;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.4px;
+        }
+        
+        .add-money-btn:hover {
+            background: #f8fdfc;
+            box-shadow: 0 6px 20px rgba(60, 179, 113, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .add-money-btn:active {
+            transform: scale(0.97);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 16px;
-            opacity: 0.5;
+            margin-top: 32px;
         }
         
-        .empty-title {
-            font-size: 16px;
+        .section-header h3 {
+            font-size: 18px;
             font-weight: 700;
             color: #0a0e27;
-            margin-bottom: 8px;
+            letter-spacing: -0.5px;
         }
         
-        .empty-text {
+        .see-all {
+            color: #3CB371;
+            text-decoration: none;
             font-size: 13px;
-            color: #8892a8;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
             letter-spacing: 0.3px;
         }
         
-        /* Service Grid */
-        .services-section {
+        .see-all:hover {
+            color: #2d9a5f;
+            transform: translateX(4px);
+        }
+        
+        .features-block {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 16px rgba(10, 14, 39, 0.06);
+            border: 1px solid #f0f2f5;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: #0a0e27;
+            transition: 0.3s;
+            padding: 8px;
+            border-radius: 12px;
+        }
+        
+        .feature-item:hover {
+            background: #f7f9fc;
+        }
+        
+        .feature-logo {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: #f5f7fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 8px;
+            transition: 0.3s;
+            color: #3CB371;
+        }
+        
+        .feature-logo i {
+            font-size: 24px;
+        }
+        
+        .feature-item:hover .feature-logo {
+            background: linear-gradient(135deg, rgba(60, 179, 113, 0.1) 0%, rgba(45, 154, 95, 0.1) 100%);
+            transform: scale(1.12);
+            color: #2d9a5f;
+        }
+        
+        .feature-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #0a0e27;
+            line-height: 1.3;
+            letter-spacing: 0.2px;
+        }
+        
+        .video-section {
             margin-bottom: 28px;
         }
         
-        .services-title {
+        .video-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+        
+        .video-container {
+            background: white;
+            border-radius: 18px;
+            padding: 12px;
+            box-shadow: 0 2px 16px rgba(10, 14, 39, 0.06);
+            border: 1px solid #f0f2f5;
+            overflow: hidden;
+        }
+        
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+        
+        .community-section {
+            margin-bottom: 28px;
+        }
+        
+        .community-card {
+            background: linear-gradient(135deg, #f7f9fc 0%, #f0f5fb 100%);
+            border-radius: 18px;
+            padding: 28px 24px;
+            border: 2px solid #e8eef7;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .community-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(60, 179, 113, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .community-card::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(60, 179, 113, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .community-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .community-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .community-content h2 {
             font-size: 16px;
             font-weight: 700;
             color: #0a0e27;
@@ -134,102 +368,153 @@
             letter-spacing: -0.4px;
         }
         
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-            margin-bottom: 24px;
-        }
-        
-        .service-card {
-            background: white;
-            border-radius: 14px;
-            padding: 16px;
-            border: 1.5px solid #f0f2f5;
-            cursor: pointer;
-            transition: 0.3s;
-            text-decoration: none;
-            color: #0a0e27;
+        .community-list {
             display: flex;
             flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
         }
         
-        .service-card:hover {
-            border-color: #3CB371;
-            box-shadow: 0 6px 20px rgba(60, 179, 113, 0.12);
-            transform: translateY(-4px);
+        .community-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.5;
+            letter-spacing: 0.2px;
         }
         
-        .service-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(60, 179, 113, 0.1) 0%, rgba(45, 154, 95, 0.1) 100%);
+        .check {
+            color: #3CB371;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .community-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .join-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            margin-bottom: 12px;
-            color: #3CB371;
-        }
-        
-        .service-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: #0a0e27;
-            margin-bottom: 4px;
-            letter-spacing: -0.3px;
-        }
-        
-        .service-platform {
+            gap: 8px;
+            padding: 13px 18px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
             font-size: 12px;
-            color: #8892a8;
-            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            color: white;
+            letter-spacing: 0.3px;
+            font-family: 'Outfit', sans-serif;
         }
         
-        .service-price {
-            font-size: 14px;
-            font-weight: 700;
-            color: #3CB371;
+        .join-btn.telegram {
+            background: linear-gradient(135deg, #0088cc 0%, #0077b5 100%);
+            box-shadow: 0 4px 16px rgba(0, 136, 204, 0.2);
         }
         
-        /* Order Form Modal */
+        .join-btn.telegram:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(0, 136, 204, 0.3);
+        }
+        
+        .join-btn.whatsapp {
+            background: linear-gradient(135deg, #25d366 0%, #20ba61 100%);
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.2);
+        }
+        
+        .join-btn.whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(37, 211, 102, 0.3);
+        }
+        
+        .bottom-nav{
+            position:fixed;
+            bottom:0;
+            left:0;
+            right:0;
+            height:78px;
+            background:#fff;
+            display:flex;
+            justify-content:space-around;
+            align-items:center;
+            border-top:1px solid #f1f1f1;
+            box-shadow:0 -8px 30px rgba(0,0,0,.05);
+            z-index:1000;
+        }
+
+        .nav-item{
+            text-decoration:none;
+            color:#9CA3AF;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:5px;
+            font-size:11px;
+            font-weight:500;
+            transition:.3s;
+        }
+
+        .nav-item i{
+            font-size:20px;
+        }
+
+        .nav-item.active{
+            color:#3CB371;
+        }
+
+        .nav-item.active i{
+            background:rgba(60,179,113,.12);
+            width:42px;
+            height:42px;
+            border-radius:12px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+
+        .nav-item span{
+            font-size:11px;
+        }
+        
         .modal {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background: rgba(10, 14, 39, 0.6);
             backdrop-filter: blur(4px);
-            align-items: flex-end;
+            justify-content: center;
+            align-items: center;
             z-index: 200;
-            animation: slideUp 0.3s ease-out;
         }
-        
-        @keyframes slideUp {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
+
         .modal.active {
             display: flex;
         }
-        
+
         .modal-content {
             background: white;
-            border-radius: 24px 24px 0 0;
+            width: 90%;
+            max-width: 420px;
+            border-radius: 20px;
             padding: 28px 20px;
-            width: 100%;
-            max-height: 85vh;
+            max-height: 80vh;
             overflow-y: auto;
-            animation: modalSlideUp 0.3s ease-out;
+            animation: popupScale .25s ease;
         }
         
-        @keyframes modalSlideUp {
-            from { transform: translateY(100%); }
-            to { transform: translateY(0); }
+        @keyframes popupScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
         
         .modal-header {
@@ -297,35 +582,6 @@
             box-shadow: 0 0 0 4px rgba(60, 179, 113, 0.08);
         }
         
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        
-        .price-info {
-            background: #f5f7fa;
-            border-radius: 10px;
-            padding: 14px;
-            margin: 16px 0;
-            border-left: 4px solid #3CB371;
-        }
-        
-        .price-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-        
-        .price-row:last-child {
-            margin-bottom: 0;
-            padding-top: 8px;
-            border-top: 1px solid #e8eef7;
-            font-weight: 700;
-            color: #3CB371;
-        }
-        
         .form-button {
             width: 100%;
             background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
@@ -352,92 +608,245 @@
             transform: scale(0.98);
         }
         
-        .error-message {
-            color: #ef4444;
-            font-size: 12px;
-            margin-top: 6px;
+        .form-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
-        /* Bottom Navigation */
-        .bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    height:78px;
-    background:#fff;
-    display:flex;
-    justify-content:space-around;
-    align-items:center;
-    border-top:1px solid #f1f1f1;
-    box-shadow:0 -8px 30px rgba(0,0,0,.05);
-    z-index:1000;
-}
-
-.nav-item{
-    text-decoration:none;
-    color:#9CA3AF;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:5px;
-    font-size:11px;
-    font-weight:500;
-    transition:.3s;
-}
-
-.nav-item i{
-    font-size:20px;
-}
-
-.nav-item.active{
-    color:#3CB371;
-}
-
-.nav-item.active i{
-    background:rgba(60,179,113,.12);
-    width:42px;
-    height:42px;
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-}
-
-.nav-item span{
-    font-size:11px;
-}
+        .preset-amounts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .preset-btn {
+            padding: 10px;
+            border: 1.5px solid #e8eef7;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            color: #0a0e27;
+            transition: 0.3s;
+            font-family: 'Outfit', sans-serif;
+        }
+        
+        .preset-btn:hover {
+            border-color: #3CB371;
+            color: #3CB371;
+            background: rgba(60, 179, 113, 0.05);
+        }
+        
+        .preset-btn.active {
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            color: white;
+            border-color: #3CB371;
+        }
+        
+        .payment-status {
+            display: none;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+        }
+        
+        .payment-status.show {
+            display: block;
+        }
+        
+        .payment-status.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        
+        .payment-status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+        
+        .payment-status.processing {
+            background: #dbeafe;
+            color: #0c2340;
+            border: 1px solid #93c5fd;
+        }
         
         @media (max-width: 600px) {
             main { padding: 12px; }
-            .services-grid { grid-template-columns: repeat(2, 1fr); }
-            .form-row { grid-template-columns: 1fr 1fr; }
+            .features-grid { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .feature-logo { width: 48px; height: 48px; font-size: 22px; }
+            .feature-label { font-size: 10px; }
+            .wallet-card { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .wallet-amount { font-size: 36px; }
+            .community-buttons { grid-template-columns: 1fr 1fr; }
+            .greeting-text p { font-size: 18px; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <div class="header">
-        <button class="header-back" onclick="goBack()">←</button>
-        <h1 class="header-title">New Order</h1>
-    </div>
-
-    <!-- Main Content -->
     <main>
-        <div class="services-section">
-            <h2 class="services-title">Select a Service</h2>
-            <div id="contentArea">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <div class="loading-text">Loading services...</div>
+        <div class="header-section">
+            <div class="greeting-section">
+                <div class="user-avatar" id="userInitial">U</div>
+                <div class="greeting-text">
+                    <h2>Good Afternoon ☀️</h2>
+                    <p id="userName">User</p>
+                </div>
+            </div>
+            <div class="notification-icon" onclick="alert('No new notifications')">🔔</div>
+        </div>
+
+        <div class="wallet-card">
+            <div class="wallet-left">
+                <div class="wallet-label">
+                    <span>Wallet Balance</span>
+                    <span>👁️</span>
+                </div>
+                <div class="wallet-amount" id="walletAmount">₦0.00</div>
+            </div>
+            <div class="wallet-right">
+               <a href="wallet-history.html" class="wallet-history" style="text-decoration: none; color: white; cursor: pointer;">Wallet History ></a>
+                <button class="add-money-btn" onclick="openModal('add-funds')">Add Money</button>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-header">
+                <h3>Top Features</h3>
+                <a href="new-order.html" class="see-all">See All</a>
+            </div>
+            
+            <div class="features-block">
+                <div class="features-grid">
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-telegram"></i></div>
+                        <div class="feature-label">Telegram</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-instagram"></i></div>
+                        <div class="feature-label">Instagram</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-x-twitter"></i></div>
+                        <div class="feature-label">Twitter</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-youtube"></i></div>
+                        <div class="feature-label">Youtube</div>
+                    </a>
+
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-facebook-f"></i></div>
+                        <div class="feature-label">FaceBook</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-spotify"></i></div>
+                        <div class="feature-label">Spotify</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-threads"></i></div>
+                        <div class="feature-label">Thread</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-tiktok"></i></div>
+                        <div class="feature-label">TikTok</div>
+                    </a>
+
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-soundcloud"></i></div>
+                        <div class="feature-label">SoundCloud</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-linkedin-in"></i></div>
+                        <div class="feature-label">Linkedin</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fas fa-music"></i></div>
+                        <div class="feature-label">Audiomack</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-apple"></i></div>
+                        <div class="feature-label">Apple Music</div>
+                    </a>
+
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fas fa-globe"></i></div>
+                        <div class="feature-label">Website Traffic</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-twitch"></i></div>
+                        <div class="feature-label">Twitch</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fab fa-discord"></i></div>
+                        <div class="feature-label">Discord</div>
+                    </a>
+                    <a href="new-order.html" class="feature-item">
+                        <div class="feature-logo"><i class="fas fa-star"></i></div>
+                        <div class="feature-label">Review</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="video-section">
+            <h3>How to use UpSocial</h3>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <iframe 
+                        src="https://www.youtube.com/embed/25wJ17ln6D8?si=ENOsgcudt-GVvcbp" 
+                        allowfullscreen="" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+        
+        <div class="community-section">
+            <div class="community-card">
+                <h3 class="community-title">Join our Community</h3>
+                <div class="community-content">
+                    <h2>Get early access to</h2>
+                    <div class="community-list">
+                        <div class="community-item">
+                            <span class="check">✓</span>
+                            <span>Special discounts before they go public</span>
+                        </div>
+                        <div class="community-item">
+                            <span class="check">✓</span>
+                            <span>Insider updates on new services</span>
+                        </div>
+                        <div class="community-item">
+                            <span class="check">✓</span>
+                            <span>Private promo codes shared only in the community</span>
+                        </div>
+                    </div>
+                    <div class="community-buttons">
+                        <a href="https://t.me/upsocialglobal" class="join-btn telegram">
+                            <i class="fab fa-telegram"></i>
+                            <span>Join Telegram</span>
+                        </a>
+                        <a href="https://wa.link/qo09f1" class="join-btn whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>Join WhatsApp</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Bottom Navigation -->
     <div class="bottom-nav">
-        <a href="Dashboard.html" class="nav-item">
+        <a href="dashboard.html" class="nav-item active">
             <i class="fas fa-house"></i>
             <span>Home</span>
         </a>
@@ -445,7 +854,7 @@
             <i class="fas fa-layer-group"></i>
             <span>Orders</span>
         </a>
-        <a href="new-order.html" class="nav-item active">
+        <a href="new-order.html" class="nav-item">
             <i class="fas fa-bag-shopping"></i>
             <span>New-Orders</span>
         </a>
@@ -455,280 +864,227 @@
         </a>
     </div>
 
-    <!-- Order Form Modal -->
-    <div class="modal" id="orderModal">
+    <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="modal-title" id="modalTitle">Place Order</div>
+                <div class="modal-title" id="modalTitle">Add Money</div>
                 <button class="modal-close" onclick="closeModal()">×</button>
             </div>
-
-            <div class="form-group">
-                <label class="form-label">Service</label>
-                <input type="text" class="form-input" id="serviceName" readonly style="background: #f5f7fa; color: #8892a8;">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Platform</label>
-                <input type="text" class="form-input" id="platformName" readonly style="background: #f5f7fa; color: #8892a8;">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Target Username/Link *</label>
-                <input type="text" class="form-input" id="targetUsername" placeholder="@username or profile link">
-                <div class="error-message" id="targetError"></div>
-            </div>
-
-            <div class="form-row">
+            
+            <div class="payment-status" id="paymentStatus"></div>
+            
+            <div id="add-funds-content">
+                <div class="preset-amounts">
+                    <button class="preset-btn" onclick="setAmount(500)">₦500</button>
+                    <button class="preset-btn" onclick="setAmount(1000)">₦1,000</button>
+                    <button class="preset-btn" onclick="setAmount(5000)">₦5,000</button>
+                    <button class="preset-btn" onclick="setAmount(10000)">₦10,000</button>
+                    <button class="preset-btn" onclick="setAmount(20000)">₦20,000</button>
+                    <button class="preset-btn" onclick="setAmount(50000)">₦50,000</button>
+                </div>
+                
                 <div class="form-group">
-                    <label class="form-label">Quantity *</label>
-                    <input type="number" class="form-input" id="quantity" placeholder="Minimum: 10" min="10" value="100">
-                    <div class="error-message" id="quantityError"></div>
+                    <label class="form-label">Amount (₦)</label>
+                    <input type="number" class="form-input" id="fundAmount" placeholder="Enter amount" min="100" value="1000">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Price per unit</label>
-                    <input type="text" class="form-input" id="pricePerUnit" readonly style="background: #f5f7fa; color: #8892a8;">
-                </div>
+                <button class="form-button" id="fundButton" onclick="payWithKora()">Fund Wallet</button>
             </div>
-
-            <div class="price-info">
-                <div class="price-row">
-                    <span>Subtotal:</span>
-                    <span id="subtotal">₦0.00</span>
-                </div>
-                <div class="price-row">
-                    <span style="font-weight: 600; color: #0a0e27;">Total Cost:</span>
-                    <span id="totalCost">₦0.00</span>
-                </div>
-            </div>
-
-            <button class="form-button" onclick="submitOrder()">Place Order</button>
         </div>
     </div>
 
     <script>
-        let services = [];
-        let currentService = null;
+        const API_URL = 'https://upsocial-api.onrender.com/api';
 
-        // Initialize
+        function getHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': 'Bearer ' + token })
+            };
+        }
+
         window.addEventListener('load', function() {
             checkLogin();
-            loadServices();
+            loadUserData();
         });
 
         function checkLogin() {
-            const isLoggedIn = localStorage.getItem('upsocial_loggedIn');
-            if (!isLoggedIn || isLoggedIn === 'false') {
+            const token = localStorage.getItem('token');
+            if (!token) {
                 window.location.href = 'login.html';
                 return;
             }
         }
 
-        function loadServices() {
-            // Try to load from cached services first
-            const cachedServices = localStorage.getItem('upsocial_services');
-            if (cachedServices) {
-                services = JSON.parse(cachedServices);
-                renderServices();
-                return;
-            }
-
-            // Get API settings
-            const apiSettings = localStorage.getItem('upsocial_apiSettings');
-            if (!apiSettings) {
-                showEmptyState('No API Configured', 'Go to Admin Settings to configure your SMM panel API');
-                return;
-            }
-
-            const settings = JSON.parse(apiSettings);
-            let apiUrl = settings.url;
-            const options = { method: 'GET' };
-
-            // Apply authentication based on method
-            if (settings.authMethod === 'query') {
-                apiUrl += (apiUrl.includes('?') ? '&' : '?') + 'api_key=' + encodeURIComponent(settings.key);
-            } else if (settings.authMethod === 'header') {
-                options.headers = {
-                    'Authorization': 'Bearer ' + settings.key,
-                    'Content-Type': 'application/json'
-                };
-            } else if (settings.authMethod === 'header-key') {
-                options.headers = {
-                    'X-API-Key': settings.key,
-                    'Content-Type': 'application/json'
-                };
-            }
-
-            fetch(apiUrl, options)
-                .then(response => response.json())
-                .then(data => {
-                    services = Array.isArray(data) ? data : data.services || data.data || [];
-                    
-                    // Cache services
-                    if (services.length > 0) {
-                        localStorage.setItem('upsocial_services', JSON.stringify(services));
-                    }
-                    
-                    renderServices();
-                })
-                .catch(error => {
-                    console.error('Error loading services:', error);
-                    showEmptyState('Failed to load services', 'Check your API configuration in Admin Settings');
+        async function loadUserData() {
+            try {
+                const userResponse = await fetch(API_URL + '/wallet', {
+                    headers: getHeaders()
                 });
-        }
+                
+                if (!userResponse.ok) {
+                    if (userResponse.status === 401) {
+                        localStorage.clear();
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    throw new Error('Failed to load user data');
+                }
 
-        function renderServices() {
-            const contentArea = document.getElementById('contentArea');
-            
-            if (!services || services.length === 0) {
-                showEmptyState('No Services Available', 'Connect your API to display services');
-                return;
+                const walletData = await userResponse.json();
+                const userStr = localStorage.getItem('upsocial_user');
+                const user = userStr ? JSON.parse(userStr) : {};
+                
+                const initial = (user.username || 'U')[0].toUpperCase();
+                document.getElementById('userInitial').textContent = initial;
+                document.getElementById('userName').textContent = user.username || 'User';
+                document.getElementById('walletAmount').textContent = '₦' + (walletData.balance || 0).toFixed(2);
+
+            } catch (err) {
+                console.error('Error loading user data:', err);
+                const userStr = localStorage.getItem('upsocial_user');
+                const user = userStr ? JSON.parse(userStr) : {};
+                const initial = (user.username || 'U')[0].toUpperCase();
+                document.getElementById('userInitial').textContent = initial;
+                document.getElementById('userName').textContent = user.username || 'User';
+                document.getElementById('walletAmount').textContent = '₦0.00';
             }
-
-            const grid = document.createElement('div');
-            grid.className = 'services-grid';
-            
-            services.forEach((service, index) => {
-                const card = document.createElement('div');
-                card.className = 'service-card';
-                card.onclick = () => openOrderForm(index);
-                card.innerHTML = `
-                    <div class="service-icon">${service.icon || '<i class="fas fa-star"></i>'}</div>
-                    <div class="service-name">${service.name || 'Unknown Service'}</div>
-                    <div class="service-platform">${service.platform || 'Platform'}</div>
-                    <div class="service-price">₦${parseFloat(service.price || 0).toFixed(2)}</div>
-                `;
-                grid.appendChild(card);
-            });
-            
-            contentArea.innerHTML = '';
-            contentArea.appendChild(grid);
         }
 
-        function showEmptyState(title, text) {
-            const contentArea = document.getElementById('contentArea');
-            contentArea.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📭</div>
-                    <div class="empty-title">${title}</div>
-                    <div class="empty-text">${text}</div>
-                </div>
-            `;
-        }
-
-        function openOrderForm(serviceIndex) {
-            currentService = services[serviceIndex];
-            if (!currentService) return;
-
-            document.getElementById('serviceName').value = currentService.name || '';
-            document.getElementById('platformName').value = currentService.platform || '';
-            document.getElementById('pricePerUnit').value = '₦' + parseFloat(currentService.price || 0).toFixed(2);
-            document.getElementById('quantity').value = '100';
-            document.getElementById('targetUsername').value = '';
-            document.getElementById('modalTitle').textContent = 'Order: ' + (currentService.name || 'Service');
-            
-            updatePriceInfo();
-            document.getElementById('orderModal').classList.add('active');
+        function openModal(type) {
+            document.getElementById('modal').classList.add('active');
+            document.getElementById('paymentStatus').className = 'payment-status';
+            document.getElementById('fundAmount').value = '1000';
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
         }
 
         function closeModal() {
-            document.getElementById('orderModal').classList.remove('active');
-            clearErrors();
+            document.getElementById('modal').classList.remove('active');
+            document.getElementById('fundAmount').value = '';
+            document.getElementById('paymentStatus').className = 'payment-status';
+            const btn = document.getElementById('fundButton');
+            btn.textContent = 'Fund Wallet';
+            btn.disabled = false;
         }
 
-        function updatePriceInfo() {
-            const quantity = parseInt(document.getElementById('quantity').value) || 0;
-            const price = parseFloat(currentService.price || 0);
-            const subtotal = quantity * price;
-            document.getElementById('subtotal').textContent = '₦' + subtotal.toFixed(2);
-            document.getElementById('totalCost').textContent = '₦' + subtotal.toFixed(2);
+        function setAmount(amount) {
+            document.getElementById('fundAmount').value = amount;
+            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
         }
 
-        document.getElementById('quantity').addEventListener('input', updatePriceInfo);
-
-        function clearErrors() {
-            document.getElementById('targetError').textContent = '';
-            document.getElementById('quantityError').textContent = '';
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('paymentStatus');
+            statusEl.textContent = message;
+            statusEl.className = 'payment-status show ' + type;
         }
 
-        function submitOrder() {
-            clearErrors();
-            let hasError = false;
-
-            const target = document.getElementById('targetUsername').value.trim();
-            const quantity = parseInt(document.getElementById('quantity').value);
-
-            if (!target) {
-                document.getElementById('targetError').textContent = 'Please enter target username or link';
-                hasError = true;
-            }
-
-            if (!quantity || quantity < 10) {
-                document.getElementById('quantityError').textContent = 'Minimum quantity is 10';
-                hasError = true;
-            }
-
-            if (hasError) return;
-
-            const totalCost = quantity * parseFloat(currentService.price || 0);
-
-            // Check wallet balance
-            const userEmail = localStorage.getItem('upsocial_currentUser');
-            const walletData = localStorage.getItem('upsocial_userWallet_' + userEmail);
-            const wallet = walletData ? JSON.parse(walletData) : { balance: 0, transactions: [] };
-
-            if (wallet.balance < totalCost) {
-                alert('❌ Insufficient wallet balance!\n\nYou need ₦' + totalCost.toFixed(2) + ' but only have ₦' + wallet.balance.toFixed(2));
-                closeModal();
+        // ========== KORAPAY PAYMENT INTEGRATION ==========
+        async function payWithKora() {
+            const amount = parseFloat(document.getElementById('fundAmount').value);
+            
+            if (!amount || amount < 100) {
+                showStatus('Minimum funding amount is ₦100', 'error');
                 return;
             }
 
-            // Create order
-            const orderId = 'ORD-' + Date.now();
-            const order = {
-                id: orderId,
-                serviceId: currentService.id || '',
-                service: currentService.name || '',
-                platform: currentService.platform || '',
-                target: target,
-                quantity: quantity,
-                price: totalCost,
-                status: 'pending',
-                date: new Date().toLocaleDateString(),
-                time: new Date().toLocaleTimeString()
-            };
+            const btn = document.getElementById('fundButton');
+            const originalText = btn.textContent;
+            btn.textContent = 'Processing...';
+            btn.disabled = true;
+            showStatus('Initializing payment...', 'processing');
 
-            // Get existing orders
-            const ordersData = localStorage.getItem('upsocial_userOrders_' + userEmail);
-            let orders = ordersData ? JSON.parse(ordersData) : [];
-            orders.push(order);
+            try {
+                // Step 1: Initialize payment on backend
+                const initResponse = await fetch(API_URL + '/payment/initialize', {
+                    method: 'POST',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ amount })
+                });
 
-            // Deduct from wallet
-            wallet.balance -= totalCost;
-            wallet.transactions = wallet.transactions || [];
-            wallet.transactions.push({
-                type: 'Order: ' + (currentService.name || ''),
-                amount: -totalCost,
-                date: new Date().toLocaleDateString(),
-                status: 'completed'
-            });
+                const initData = await initResponse.json();
+                
+                if (!initData.success) {
+                    throw new Error(initData.error || 'Failed to initialize payment');
+                }
 
-            // Save to localStorage
-            localStorage.setItem('upsocial_userOrders_' + userEmail, JSON.stringify(orders));
-            localStorage.setItem('upsocial_userWallet_' + userEmail, JSON.stringify(wallet));
+                showStatus('Opening secure payment...', 'processing');
 
-            // Success message
-            alert('✅ Order Placed Successfully!\n\nOrder ID: ' + orderId + '\nService: ' + currentService.name + '\nQuantity: ' + quantity + '\nTotal: ₦' + totalCost.toFixed(2));
-            
-            closeModal();
+                // Step 2: Open Korapay checkout
+                window.Korapay.initialize({
+                    key: initData.publicKey,
+                    reference: initData.reference,
+                    amount: initData.amount,
+                    currency: initData.currency || 'NGN',
+                    customer: {
+                        name: initData.customer.name,
+                        email: initData.customer.email
+                    },
+                    notification_url: API_URL + '/webhook/korapay',
+                    onClose: function() {
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                        showStatus('Payment cancelled. You can try again.', 'error');
+                    },
+                    onSuccess: async function(data) {
+                        console.log('Payment success:', data);
+                        showStatus('Payment successful! Verifying and funding wallet...', 'processing');
+                        
+                        // Step 3: Verify payment and auto-fund wallet
+                        try {
+                            const verifyResponse = await fetch(API_URL + '/payment/verify/' + initData.reference, {
+                                headers: getHeaders()
+                            });
+                            
+                            const verifyData = await verifyResponse.json();
+                            
+                            if (verifyData.status === 'success') {
+                                // Update wallet display
+                                document.getElementById('walletAmount').textContent = '₦' + verifyData.balance.toFixed(2);
+                                
+                                // Update localStorage user data
+                                const userStr = localStorage.getItem('upsocial_user');
+                                if (userStr) {
+                                    const user = JSON.parse(userStr);
+                                    user.balance = verifyData.balance;
+                                    localStorage.setItem('upsocial_user', JSON.stringify(user));
+                                }
+                                
+                                showStatus('✅ ₦' + verifyData.amount.toFixed(2) + ' added! New balance: ₦' + verifyData.balance.toFixed(2), 'success');
+                                
+                                setTimeout(() => {
+                                    closeModal();
+                                }, 3000);
+                            } else {
+                                showStatus('⏳ Payment is being processed. Your wallet will be updated shortly via webhook.', 'processing');
+                                setTimeout(() => closeModal(), 4000);
+                            }
+                        } catch (verifyErr) {
+                            console.error('Verification error:', verifyErr);
+                            showStatus('✅ Payment completed! Your wallet will be updated shortly.', 'success');
+                            setTimeout(() => closeModal(), 3000);
+                        }
+                        
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    },
+                    onFailed: function(data) {
+                        console.error('Payment failed:', data);
+                        showStatus('❌ Payment failed. Please try again.', 'error');
+                        btn.textContent = originalText;
+                        btn.disabled = false;
+                    }
+                });
+
+            } catch (err) {
+                console.error('Payment error:', err);
+                showStatus('❌ ' + err.message, 'error');
+                btn.textContent = originalText;
+                btn.disabled = false;
+            }
         }
 
-        function goBack() {
-            window.history.back();
-        }
-
-        // Close modal on outside click
-        document.getElementById('orderModal').addEventListener('click', function(e) {
+        document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
     </script>
