@@ -542,11 +542,21 @@
     </div>
 
     <script>
+        const API_URL = 'https://upsocial-api.onrender.com/api';
+
         let allTransactions = [];
         let filteredTransactions = [];
         let currentFilter = 'all';
         let currentPage = 1;
         const transactionsPerPage = 10;
+
+        function getHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': 'Bearer ' + token })
+            };
+        }
 
         // Initialize
         window.addEventListener('load', function() {
@@ -554,76 +564,126 @@
             loadWalletHistory();
         });
 
-        function checkLogin() {
-            const isLoggedIn = localStorage.getItem('upsocial_loggedIn');
-            if (!isLoggedIn || isLoggedIn === 'false') {
+        async function checkLogin() {
+            const token = localStorage.getItem('token');
+            if (!token) {
                 window.location.href = 'login.html';
                 return;
             }
+
+            try {
+                const response = await fetch(API_URL + '/wallet', {
+                    headers: getHeaders()
+                });
+
+                if (!response.ok) {
+                    localStorage.clear();
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (err) {
+                console.log('Offline mode - token exists');
+            }
         }
 
-        function loadWalletHistory() {
-            const userEmail = localStorage.getItem('upsocial_currentUser');
-            const walletData = localStorage.getItem('upsocial_userWallet_' + userEmail);
-            const wallet = walletData ? JSON.parse(walletData) : { balance: 0, transactions: [] };
-            
-            const ordersData = localStorage.getItem('upsocial_userOrders_' + userEmail);
-            const orders = ordersData ? JSON.parse(ordersData) : [];
+        async function loadWalletHistory() {
+            try {
+                // Fetch wallet balance
+                const walletResponse = await fetch(API_URL + '/wallet', {
+                    headers: getHeaders()
+                });
 
-            // Build transactions array
-            allTransactions = [];
+                if (!walletResponse.ok) {
+                    if (walletResponse.status === 401) {
+                        localStorage.clear();
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    throw new Error('Failed to load wallet');
+                }
 
-            // Add wallet transactions (deposits)
-            if (wallet.transactions) {
-                wallet.transactions.forEach(trans => {
+                const walletData = await walletResponse.json();
+                const balance = parseFloat(walletData.balance || 0);
+
+                // Fetch transactions from API
+                const txnResponse = await fetch(API_URL + '/transactions', {
+                    headers: getHeaders()
+                });
+
+                let apiTransactions = [];
+                if (txnResponse.ok) {
+                    apiTransactions = await txnResponse.json();
+                }
+
+                // Fetch orders for service transactions
+                const ordersResponse = await fetch(API_URL + '/orders', {
+                    headers: getHeaders()
+                });
+
+                let orders = [];
+                if (ordersResponse.ok) {
+                    orders = await ordersResponse.json();
+                }
+
+                // Build transactions array from API data
+                allTransactions = [];
+
+                // Add API transactions (deposits)
+                apiTransactions.forEach(trans => {
                     allTransactions.push({
-                        id: 'TXN_' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-                        type: 'deposit',
-                        description: trans.type || 'Wallet Deposit',
-                        amount: trans.amount,
-                        date: trans.date,
-                        time: trans.time || new Date().toLocaleTimeString(),
+                        id: trans.reference || 'TXN-' + trans.id,
+                        type: trans.type === 'deposit' ? 'deposit' : 'withdrawal',
+                        description: trans.description || (trans.type === 'deposit' ? 'Wallet Deposit' : 'Withdrawal'),
+                        amount: trans.type === 'deposit' ? parseFloat(trans.amount) : -parseFloat(trans.amount),
+                        date: new Date(trans.created_at).toLocaleDateString(),
+                        time: new Date(trans.created_at).toLocaleTimeString(),
                         status: trans.status || 'completed',
-                        method: trans.method || 'Korapay',
+                        method: 'Korapay',
                         reference: trans.reference || 'N/A'
                     });
                 });
-            }
 
-            // Add order transactions (service purchases)
-            orders.forEach(order => {
-                allTransactions.push({
-                    id: order.id,
-                    type: 'service',
-                    description: `${order.service} - ${order.platform}`,
-                    amount: -order.price,
-                    quantity: order.quantity,
-                    date: order.date,
-                    time: order.time || 'N/A',
-                    status: order.status || 'pending',
-                    platform: order.platform,
-                    target: order.target
+                // Add order transactions (service purchases)
+                orders.forEach(order => {
+                    allTransactions.push({
+                        id: 'ORD-' + order.id,
+                        type: 'service',
+                        description: (order.service || 'Service') + ' - Order #' + order.id,
+                        amount: -parseFloat(order.price || 0),
+                        quantity: order.quantity || 0,
+                        date: new Date(order.created_at).toLocaleDateString(),
+                        time: new Date(order.created_at).toLocaleTimeString(),
+                        status: order.status || 'pending',
+                        platform: 'N/A',
+                        target: order.link || 'N/A'
+                    });
                 });
-            });
 
-            // Sort by date (newest first)
-            allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+                // Sort by date (newest first)
+                allTransactions.sort((a, b) => new Date(b.date + ' ' + b.time) - new Date(a.date + ' ' + a.time));
 
-            // Update summary
-            updateSummary(wallet, orders);
+                // Update summary
+                updateSummary(balance, orders);
 
-            // Display transactions
-            filterTransactions('all');
+                // Display transactions
+                filterTransactions('all');
+
+            } catch (err) {
+                console.error('Error loading wallet history:', err);
+                document.getElementById('transactionsContainer').innerHTML = 
+                    '<div class="empty-state"><div class="empty-icon">&#128269;</div><div class="empty-text">Error loading transactions</div><div class="empty-subtext">' + err.message + '</div></div>';
+            }
         }
 
-        function updateSummary(wallet, orders) {
-            const currentBalance = wallet.balance || 0;
-            const totalSpent = orders.reduce((sum, o) => sum + (o.price || 0), 0);
-            const totalDeposits = (wallet.transactions || []).reduce((sum, t) => sum + (t.amount || 0), 0);
+        function updateSummary(balance, orders) {
+            const totalSpent = orders.reduce((sum, o) => sum + parseFloat(o.price || 0), 0);
+            const totalDeposits = allTransactions
+                .filter(t => t.type === 'deposit')
+                .reduce((sum, t) => sum + t.amount, 0);
 
-            document.getElementById('currentBalance').textContent = '₦' + currentBalance.toFixed(2);
-            document.getElementById('totalSpent').textContent = '₦' + totalSpent.toFixed(2);
-            document.getElementById('totalDeposits').textContent = '₦' + totalDeposits.toFixed(2);
+            document.getElementById('currentBalance').textContent = '&#8358;' + balance.toFixed(2);
+            document.getElementById('totalSpent').textContent = '&#8358;' + totalSpent.toFixed(2);
+            document.getElementById('totalDeposits').textContent = '&#8358;' + totalDeposits.toFixed(2);
             document.getElementById('transactionCount').textContent = allTransactions.length;
         }
 
@@ -633,7 +693,11 @@
 
             // Update active button
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                document.querySelectorAll('.filter-btn')[0].classList.add('active');
+            }
 
             // Filter transactions
             if (filter === 'all') {
@@ -646,7 +710,6 @@
                 filteredTransactions = allTransactions.filter(t => t.status === 'completed');
             }
 
-            // Display filtered transactions
             displayTransactions();
         }
 
@@ -669,11 +732,11 @@
             const pageTransactions = filteredTransactions.slice(startIndex, endIndex);
 
             // Display transactions
-            container.innerHTML = pageTransactions.map(trans => `
-                <div class="transaction-card" onclick="openTransactionDetail(${filteredTransactions.indexOf(trans)})">
+            container.innerHTML = pageTransactions.map((trans, idx) => `
+                <div class="transaction-card" onclick="openTransactionDetail(${startIndex + idx})">
                     <div class="transaction-left">
                         <div class="transaction-icon ${trans.type}">
-                            ${trans.type === 'deposit' ? '⬇️' : '⬆️'}
+                            ${trans.type === 'deposit' ? '&#11015;' : '&#11014;'}
                         </div>
                         <div class="transaction-info">
                             <div class="transaction-type">${trans.description}</div>
@@ -687,13 +750,12 @@
                     </div>
                     <div class="transaction-right">
                         <div class="transaction-amount ${trans.amount >= 0 ? 'positive' : 'negative'}">
-                            ${trans.amount >= 0 ? '+' : ''}₦${Math.abs(trans.amount).toFixed(2)}
+                            ${trans.amount >= 0 ? '+' : ''}&#8358;${Math.abs(trans.amount).toFixed(2)}
                         </div>
                     </div>
                 </div>
             `).join('');
 
-            // Display pagination
             displayPagination();
         }
 
@@ -708,10 +770,8 @@
 
             let paginationHTML = '';
 
-            // Previous button
-            paginationHTML += `<button class="pagination-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>← Prev</button>`;
+            paginationHTML += `<button class="pagination-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&#8592; Prev</button>`;
 
-            // Page numbers
             for (let i = 1; i <= totalPages; i++) {
                 if (i === currentPage) {
                     paginationHTML += `<button class="pagination-btn active">${i}</button>`;
@@ -722,8 +782,7 @@
                 }
             }
 
-            // Next button
-            paginationHTML += `<button class="pagination-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next →</button>`;
+            paginationHTML += `<button class="pagination-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next &#8594;</button>`;
 
             paginationContainer.innerHTML = paginationHTML;
         }
@@ -754,7 +813,7 @@
                 </div>
                 <div class="transaction-detail-row">
                     <span class="detail-label">Amount</span>
-                    <span class="detail-value">${trans.amount >= 0 ? '+' : ''}₦${Math.abs(trans.amount).toFixed(2)}</span>
+                    <span class="detail-value">${trans.amount >= 0 ? '+' : ''}&#8358;${Math.abs(trans.amount).toFixed(2)}</span>
                 </div>
                 <div class="transaction-detail-row">
                     <span class="detail-label">Date</span>
@@ -806,10 +865,9 @@
             window.history.back();
         }
 
-        // Close modal on background click
         document.getElementById('transactionModal').addEventListener('click', function(e) {
             if (e.target === this) closeModal();
         });
     </script>
 </body>
-</html>
+    </html>
