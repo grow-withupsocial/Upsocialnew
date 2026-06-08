@@ -534,6 +534,472 @@
                 grid-template-columns: 1fr;
             }
         }
+    
+        /* ===== API INTEGRATION STYLES ===== */
+        .api-config-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e8eef7;
+            margin-bottom: 24px;
+        }
+
+        .api-config-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .api-config-card p {
+            font-size: 13px;
+            color: #8892a8;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group-api {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group-api label {
+            font-weight: 600;
+            color: #0a0e27;
+            font-size: 13px;
+        }
+
+        .form-group-api input,
+        .form-group-api select {
+            padding: 12px 16px;
+            border: 1px solid #e8eef7;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: 0.3s;
+            background: #f9fafb;
+            color: #0a0e27;
+        }
+
+        .form-group-api input:focus,
+        .form-group-api select:focus {
+            outline: none;
+            border-color: #3CB371;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(60, 179, 113, 0.1);
+        }
+
+        .form-group-api.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .api-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .api-status-badge.connected {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .api-status-badge.disconnected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .api-status-badge.testing {
+            background: #dbeafe;
+            color: #0c2340;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-api {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-api-primary {
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            color: white;
+        }
+
+        .btn-api-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(60, 179, 113, 0.3);
+        }
+
+        .btn-api-secondary {
+            background: #f5f7fa;
+            color: #0a0e27;
+            border: 1.5px solid #e8eef7;
+        }
+
+        .btn-api-secondary:hover {
+            background: #e8eef7;
+        }
+
+        .btn-api-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1.5px solid #fca5a5;
+        }
+
+        .btn-api-danger:hover {
+            background: #fca5a5;
+        }
+
+        .services-import-area {
+            background: #f9fafb;
+            border: 2px dashed #e8eef7;
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .services-import-area.active {
+            border-color: #3CB371;
+            background: rgba(60, 179, 113, 0.05);
+        }
+
+        .import-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .import-stat {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid #e8eef7;
+        }
+
+        .import-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3CB371;
+        }
+
+        .import-stat-label {
+            font-size: 11px;
+            color: #8892a8;
+            margin-top: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .services-preview-table {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #e8eef7;
+            border-radius: 10px;
+        }
+
+        .services-preview-table .data-table {
+            margin: 0;
+        }
+
+        .services-preview-table .data-table th {
+            position: sticky;
+            top: 0;
+            background: #f9fafb;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e8eef7;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 16px 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3CB371, #2d9a5f);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        /* ===== PAYMENT SETTINGS STYLES ===== */
+        .payment-gateway-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e8eef7;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            transition: 0.3s;
+        }
+
+        .payment-gateway-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+
+        .gateway-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .gateway-info {
+            flex: 1;
+        }
+
+        .gateway-info h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0a0e27;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gateway-info p {
+            font-size: 13px;
+            color: #8892a8;
+            margin-bottom: 12px;
+        }
+
+        .gateway-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            background: #e0e0e0;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.active {
+            background: #3CB371;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .toggle-switch.active::after {
+            left: 22px;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0a0e27;
+        }
+
+        .gateway-config {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e8eef7;
+        }
+
+        .gateway-config.active {
+            display: block;
+        }
+
+        .config-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .config-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .config-group label {
+            font-weight: 600;
+            color: #0a0e27;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .config-group input {
+            padding: 10px 14px;
+            border: 1px solid #e8eef7;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            background: #f9fafb;
+            transition: 0.3s;
+        }
+
+        .config-group input:focus {
+            outline: none;
+            border-color: #3CB371;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(60, 179, 113, 0.1);
+        }
+
+        .config-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .test-payment-btn {
+            background: linear-gradient(135deg, #3CB371 0%, #2d9a5f 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+
+        .test-payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(60, 179, 113, 0.3);
+        }
+
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .payment-method-card {
+            background: white;
+            border-radius: 10px;
+            padding: 16px;
+            border: 1.5px solid #e8eef7;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .payment-method-card:hover {
+            border-color: #3CB371;
+            box-shadow: 0 4px 12px rgba(60, 179, 113, 0.1);
+        }
+
+        .payment-method-card.selected {
+            border-color: #3CB371;
+            background: rgba(60, 179, 113, 0.05);
+        }
+
+        .payment-method-card .method-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .payment-method-card .method-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #0a0e27;
+        }
+
+        .alert-box {
+            padding: 14px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            display: none;
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        .alert-box.success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+
+        .alert-box.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-box.info {
+            background: #dbeafe;
+            color: #0c2340;
+            border: 1px solid #93c5fd;
+        }
+
+        @media (max-width: 768px) {
+            .form-row { grid-template-columns: 1fr; }
+            .import-stats { grid-template-columns: repeat(2, 1fr); }
+            .config-row { grid-template-columns: 1fr; }
+            .payment-gateway-card { flex-direction: column; }
+            .btn-group { flex-direction: column; }
+            .btn-api { width: 100%; }
+        }
+
     </style>
 </head>
 <body class="login-mode">
@@ -598,6 +1064,14 @@
                 <div class="nav-section-title">Settings</div>
                 <a href="#" class="nav-item" onclick="showSection('logo'); return false;">
                     <i class="fas fa-image"></i> Branding
+                </a>
+                <div class="nav-section-title">Integrations</div>
+                <a href="#" class="nav-item" onclick="showSection('api'); return false;">
+                    <i class="fas fa-plug"></i> API Integration
+                </a>
+                <div class="nav-section-title">Finance</div>
+                <a href="#" class="nav-item" onclick="showSection('payments-config'); return false;">
+                    <i class="fas fa-credit-card"></i> Payment Settings
                 </a>
             </div>
 
@@ -717,6 +1191,347 @@
                             <div class="logo-upload-area" onclick="document.getElementById('headerLogoInput').click()" ondrop="handleDrop(event, 'header')" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)">
                                 <i class="fas fa-cloud-upload-alt" style="font-size: 32px; color: #3CB371; margin-bottom: 8px;"></i>
                                 <div style="font-size: 14px; font-weight: 600; color: #0a0e27;">Click or drag image here</div>
+                <div id="api" class="section-content">
+                    <h2 class="page-title">API Integration <span id="apiStatusBadge" class="api-status-badge disconnected">● Not Connected</span></h2>
+
+                    <div class="alert-box" id="apiAlert"></div>
+
+                    <div class="api-config-card">
+                        <h3><i class="fas fa-server" style="color: #3CB371;"></i> External SMM Panel API</h3>
+                        <p>Connect to an external SMM panel API to import services automatically. Supports JSON APIs with key authentication.</p>
+
+                        <div class="form-row">
+                            <div class="form-group-api full-width">
+                                <label>API Endpoint URL</label>
+                                <input type="url" id="apiUrl" placeholder="https://api.smm-panel.com/v1/services" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>API Key</label>
+                                <input type="password" id="apiKey" placeholder="Enter your API key">
+                            </div>
+                            <div class="form-group-api">
+                                <label>Authentication Method</label>
+                                <select id="authMethod">
+                                    <option value="query">Query Parameter (?api_key=)</option>
+                                    <option value="header">Authorization Header (Bearer)</option>
+                                    <option value="header-key">Custom Header (X-API-Key)</option>
+                                    <option value="body">Request Body</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>Key Parameter Name</label>
+                                <input type="text" id="keyParamName" placeholder="api_key" value="api_key">
+                            </div>
+                            <div class="form-group-api">
+                                <label>Request Method</label>
+                                <select id="requestMethod">
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group-api full-width">
+                                <label>Additional Headers (JSON, optional)</label>
+                                <input type="text" id="extraHeaders" placeholder='{"Content-Type": "application/json"}'>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button class="btn-api btn-api-secondary" onclick="testApiConnection()">
+                                <i class="fas fa-flask"></i> Test Connection
+                            </button>
+                            <button class="btn-api btn-api-primary" onclick="saveApiConfig()">
+                                <i class="fas fa-save"></i> Save Configuration
+                            </button>
+                            <button class="btn-api btn-api-danger" onclick="clearApiConfig()">
+                                <i class="fas fa-trash"></i> Clear Config
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="api-config-card">
+                        <h3><i class="fas fa-download" style="color: #3CB371;"></i> Import Services</h3>
+                        <p>Fetch and import services from your connected API. You can preview before saving.</p>
+
+                        <div class="services-import-area" id="importArea">
+                            <i class="fas fa-cloud-download-alt" style="font-size: 40px; color: #3CB371; margin-bottom: 12px;"></i>
+                            <div style="font-size: 14px; font-weight: 600; color: #0a0e27; margin-bottom: 8px;">Ready to Import</div>
+                            <div style="font-size: 12px; color: #8892a8; margin-bottom: 16px;">Configure your API above, then fetch services</div>
+                            <button class="btn-api btn-api-primary" id="fetchServicesBtn" onclick="fetchServices()" disabled>
+                                <i class="fas fa-sync"></i> Fetch Services from API
+                            </button>
+                        </div>
+
+                        <div class="import-stats" id="importStats" style="display: none;">
+                            <div class="import-stat">
+                                <div class="import-stat-value" id="statTotal">0</div>
+                                <div class="import-stat-label">Total Found</div>
+                            </div>
+                            <div class="import-stat">
+                                <div class="import-stat-value" id="statImported">0</div>
+                                <div class="import-stat-label">To Import</div>
+                            </div>
+                            <div class="import-stat">
+                                <div class="import-stat-value" id="statUpdated">0</div>
+                                <div class="import-stat-label">To Update</div>
+                            </div>
+                            <div class="import-stat">
+                                <div class="import-stat-value" id="statSkipped">0</div>
+                                <div class="import-stat-label">Skipped</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar" id="importProgress" style="display: none;">
+                            <div class="progress-bar-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+
+                        <div class="services-preview-table" id="servicesPreview" style="display: none;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th><input type="checkbox" id="selectAllServices" checked onchange="toggleSelectAll()"></th>
+                                        <th>ID</th>
+                                        <th>Service Name</th>
+                                        <th>Category</th>
+                                        <th>Rate</th>
+                                        <th>Min</th>
+                                        <th>Max</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="servicesPreviewBody"></tbody>
+                            </table>
+                        </div>
+
+                        <div class="btn-group" id="importActions" style="display: none;">
+                            <button class="btn-api btn-api-primary" onclick="importSelectedServices()">
+                                <i class="fas fa-download"></i> Import Selected
+                            </button>
+                            <button class="btn-api btn-api-secondary" onclick="cancelImport()">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="api-config-card">
+                        <h3><i class="fas fa-cogs" style="color: #3CB371;"></i> Import Settings</h3>
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>Price Multiplier</label>
+                                <input type="number" id="priceMultiplier" value="1.5" step="0.1" min="1">
+                                <span style="font-size: 11px; color: #8892a8;">Multiply provider prices by this factor</span>
+                            </div>
+                            <div class="form-group-api">
+                                <label>Default Markup (%)</label>
+                                <input type="number" id="markupPercent" value="50" step="5" min="0">
+                                <span style="font-size: 11px; color: #8892a8;">Additional markup percentage</span>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>Auto-sync Interval</label>
+                                <select id="autoSyncInterval">
+                                    <option value="0">Manual Only</option>
+                                    <option value="3600">Every Hour</option>
+                                    <option value="21600">Every 6 Hours</option>
+                                    <option value="43200">Every 12 Hours</option>
+                                    <option value="86400">Daily</option>
+                                </select>
+                            </div>
+                            <div class="form-group-api">
+                                <label>Import Categories</label>
+                                <select id="importCategories">
+                                    <option value="all">All Categories</option>
+                                    <option value="selected">Selected Only</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-section" style="padding: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">How API Integration Works</h3>
+                        <div style="font-size: 13px; color: #4a5568; line-height: 1.8;">
+                            <p>&#8226; Enter your SMM panel provider's API endpoint and credentials</p>
+                            <p>&#8226; Test the connection to verify everything works</p>
+                            <p>&#8226; Fetch services to preview what will be imported</p>
+                            <p>&#8226; Select which services to import and set your pricing</p>
+                            <p>&#8226; Services are stored in localStorage for instant access</p>
+                            <p>&#8226; Enable auto-sync to keep services updated automatically</p>
+                            <p>&#8226; Price multiplier lets you add your margin on top of provider rates</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="payments-config" class="section-content">
+                    <h2 class="page-title">Payment Settings</h2>
+
+                    <div class="alert-box" id="paymentAlert"></div>
+
+                    <div class="payment-gateway-card">
+                        <div class="gateway-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="gateway-info">
+                            <h3>Korapay <span class="api-status-badge connected" style="margin-left: 8px;">● Recommended</span></h3>
+                            <p>Accept card payments, bank transfers, and USSD. Nigerian-focused payment processor with low fees.</p>
+                            <div class="gateway-toggle">
+                                <button class="toggle-switch active" id="korapayToggle" onclick="toggleGateway('korapay')"></button>
+                                <span class="toggle-label" id="korapayToggleLabel">Enabled</span>
+                            </div>
+                            <div class="gateway-config active" id="korapayConfig">
+                                <div class="config-row">
+                                    <div class="config-group">
+                                        <label>Public Key</label>
+                                        <input type="text" id="korapayPublicKey" placeholder="pk_test_..." value="">
+                                    </div>
+                                    <div class="config-group">
+                                        <label>Secret Key</label>
+                                        <input type="password" id="korapaySecretKey" placeholder="sk_test_..." value="">
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-group">
+                                        <label>Webhook URL</label>
+                                        <input type="text" id="korapayWebhook" readonly value="https://upsocial-api.onrender.com/api/webhook/korapay" style="background: #f0f2f5; color: #8892a8;">
+                                    </div>
+                                    <div class="config-group">
+                                        <label>Environment</label>
+                                        <select id="korapayEnv">
+                                            <option value="test">Test Mode</option>
+                                            <option value="live">Live Mode</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-group full-width">
+                                        <label>Webhook Secret (for signature verification)</label>
+                                        <input type="password" id="korapayWebhookSecret" placeholder="Optional - for enhanced security">
+                                    </div>
+                                </div>
+                                <button class="test-payment-btn" onclick="testKorapayConfig()">
+                                    <i class="fas fa-vial"></i> Test Configuration
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-gateway-card">
+                        <div class="gateway-icon" style="background: linear-gradient(135deg, #0088cc 0%, #0077b5 100%);">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="gateway-info">
+                            <h3>Manual Bank Transfer</h3>
+                            <p>Allow users to pay via direct bank transfer. You verify and credit their wallet manually.</p>
+                            <div class="gateway-toggle">
+                                <button class="toggle-switch" id="bankToggle" onclick="toggleGateway('bank')"></button>
+                                <span class="toggle-label" id="bankToggleLabel">Disabled</span>
+                            </div>
+                            <div class="gateway-config" id="bankConfig">
+                                <div class="config-row">
+                                    <div class="config-group">
+                                        <label>Bank Name</label>
+                                        <input type="text" id="bankName" placeholder="e.g. GTBank">
+                                    </div>
+                                    <div class="config-group">
+                                        <label>Account Number</label>
+                                        <input type="text" id="bankAccount" placeholder="0123456789">
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-group">
+                                        <label>Account Name</label>
+                                        <input type="text" id="bankAccountName" placeholder="UpSocial Ltd">
+                                    </div>
+                                    <div class="config-group">
+                                        <label>Minimum Deposit</label>
+                                        <input type="number" id="bankMinDeposit" value="500" placeholder="500">
+                                    </div>
+                                </div>
+                                <div class="config-row">
+                                    <div class="config-group full-width">
+                                        <label>Payment Instructions (shown to users)</label>
+                                        <input type="text" id="bankInstructions" placeholder="Transfer to the account above and upload proof...">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-gateway-card">
+                        <div class="gateway-icon" style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="gateway-info">
+                            <h3>Cryptocurrency (Coming Soon)</h3>
+                            <p>Accept Bitcoin, Ethereum, and USDT payments via automated crypto payment gateway.</p>
+                            <div class="gateway-toggle">
+                                <button class="toggle-switch" id="cryptoToggle" onclick="toggleGateway('crypto')" disabled></button>
+                                <span class="toggle-label" id="cryptoToggleLabel">Coming Soon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="api-config-card">
+                        <h3><i class="fas fa-sliders-h" style="color: #3CB371;"></i> Payment Rules</h3>
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>Minimum Deposit Amount (₦)</label>
+                                <input type="number" id="minDeposit" value="100" min="50">
+                            </div>
+                            <div class="form-group-api">
+                                <label>Maximum Deposit Amount (₦)</label>
+                                <input type="number" id="maxDeposit" value="500000" min="1000">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>Deposit Fee (%)</label>
+                                <input type="number" id="depositFee" value="0" step="0.5" min="0" max="10">
+                            </div>
+                            <div class="form-group-api">
+                                <label>Currency Symbol</label>
+                                <input type="text" id="currencySymbol" value="₦" maxlength="3">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group-api">
+                                <label>Auto-approve Deposits Under (₦)</label>
+                                <input type="number" id="autoApproveLimit" value="10000" min="0">
+                                <span style="font-size: 11px; color: #8892a8;">Set to 0 to disable auto-approval</span>
+                            </div>
+                            <div class="form-group-api">
+                                <label>Require KYC Above (₦)</label>
+                                <input type="number" id="kycLimit" value="50000" min="0">
+                                <span style="font-size: 11px; color: #8892a8;">Set to 0 to disable KYC requirement</span>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn-api btn-api-primary" onclick="savePaymentSettings()">
+                                <i class="fas fa-save"></i> Save Payment Settings
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="data-section" style="padding: 24px;">
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Payment Configuration Guide</h3>
+                        <div style="font-size: 13px; color: #4a5568; line-height: 1.8;">
+                            <p>&#8226; <strong>Korapay:</strong> Get your keys from the Korapay dashboard. Use test keys for development.</p>
+                            <p>&#8226; <strong>Webhook:</strong> Copy the webhook URL above and add it to your Korapay dashboard settings.</p>
+                            <p>&#8226; <strong>Bank Transfer:</strong> Enable for users who prefer offline payment. You must verify manually.</p>
+                            <p>&#8226; <strong>Auto-approve:</strong> Deposits under this amount will be credited instantly without review.</p>
+                            <p>&#8226; <strong>KYC:</strong> Users making deposits above this limit must complete identity verification.</p>
+                            <p>&#8226; Changes take effect immediately for new transactions. Existing pending payments are not affected.</p>
+                        </div>
+                    </div>
+                </div>
+
                                 <div class="upload-hint">PNG, JPG, SVG (max 2MB)</div>
                             </div>
                             <input type="file" id="headerLogoInput" class="file-input" accept="image/*" onchange="handleFileSelect(event, 'header')">
@@ -936,6 +1751,8 @@
             else if (section === 'orders') loadOrders();
             else if (section === 'payments') loadPayments();
             else if (section === 'logo') loadExistingLogos();
+            else if (section === 'api') loadApiConfig();
+            else if (section === 'payments-config') loadPaymentSettings();
         }
 
         function toggleSidebar() {
@@ -1108,8 +1925,532 @@
             if (token) {
                 document.body.classList.remove('login-mode');
                 loadDashboardData();
+                loadApiConfig();
+                loadPaymentSettings();
+                loadExistingLogos();
             }
         });
-    </script>
+    
+        // ========== API INTEGRATION FUNCTIONS ==========
+
+        let fetchedServices = [];
+        let apiConfig = {};
+
+        function showApiAlert(message, type) {
+            const alert = document.getElementById('apiAlert');
+            alert.textContent = message;
+            alert.className = 'alert-box show ' + type;
+            setTimeout(() => alert.classList.remove('show'), 5000);
+        }
+
+        function showPaymentAlert(message, type) {
+            const alert = document.getElementById('paymentAlert');
+            alert.textContent = message;
+            alert.className = 'alert-box show ' + type;
+            setTimeout(() => alert.classList.remove('show'), 5000);
+        }
+
+        function loadApiConfig() {
+            const saved = localStorage.getItem('upsocial_apiSettings');
+            if (saved) {
+                apiConfig = JSON.parse(saved);
+                document.getElementById('apiUrl').value = apiConfig.url || '';
+                document.getElementById('apiKey').value = apiConfig.key || '';
+                document.getElementById('authMethod').value = apiConfig.authMethod || 'query';
+                document.getElementById('keyParamName').value = apiConfig.keyParam || 'api_key';
+                document.getElementById('requestMethod').value = apiConfig.method || 'GET';
+                document.getElementById('extraHeaders').value = apiConfig.headers ? JSON.stringify(apiConfig.headers) : '';
+                document.getElementById('priceMultiplier').value = apiConfig.priceMultiplier || 1.5;
+                document.getElementById('markupPercent').value = apiConfig.markupPercent || 50;
+                document.getElementById('autoSyncInterval').value = apiConfig.autoSyncInterval || 0;
+
+                updateApiStatus(true);
+                document.getElementById('fetchServicesBtn').disabled = false;
+            }
+        }
+
+        function updateApiStatus(connected) {
+            const badge = document.getElementById('apiStatusBadge');
+            if (connected) {
+                badge.className = 'api-status-badge connected';
+                badge.innerHTML = '● Connected';
+            } else {
+                badge.className = 'api-status-badge disconnected';
+                badge.innerHTML = '● Not Connected';
+            }
+        }
+
+        async function testApiConnection() {
+            const url = document.getElementById('apiUrl').value.trim();
+            const key = document.getElementById('apiKey').value.trim();
+
+            if (!url || !key) {
+                showApiAlert('Please enter both API URL and Key', 'error');
+                return;
+            }
+
+            const badge = document.getElementById('apiStatusBadge');
+            badge.className = 'api-status-badge testing';
+            badge.innerHTML = '● Testing...';
+
+            try {
+                const authMethod = document.getElementById('authMethod').value;
+                const keyParam = document.getElementById('keyParamName').value || 'api_key';
+                const method = document.getElementById('requestMethod').value;
+                let headers = {};
+                let requestUrl = url;
+                let body = null;
+
+                // Apply authentication
+                if (authMethod === 'query') {
+                    requestUrl += (url.includes('?') ? '&' : '?') + keyParam + '=' + encodeURIComponent(key);
+                } else if (authMethod === 'header') {
+                    headers['Authorization'] = 'Bearer ' + key;
+                } else if (authMethod === 'header-key') {
+                    headers[keyParam] = key;
+                }
+
+                // Add extra headers
+                const extraHeadersStr = document.getElementById('extraHeaders').value.trim();
+                if (extraHeadersStr) {
+                    try {
+                        const extra = JSON.parse(extraHeadersStr);
+                        headers = { ...headers, ...extra };
+                    } catch (e) {
+                        showApiAlert('Invalid extra headers JSON', 'error');
+                        return;
+                    }
+                }
+
+                if (method === 'POST') {
+                    body = JSON.stringify({ [keyParam]: key });
+                    headers['Content-Type'] = 'application/json';
+                }
+
+                const options = {
+                    method: method,
+                    headers: headers,
+                    mode: 'cors'
+                };
+                if (body) options.body = body;
+
+                const response = await fetch(requestUrl, options);
+
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                }
+
+                const data = await response.json();
+
+                // Try to detect services array
+                let services = null;
+                if (Array.isArray(data)) {
+                    services = data;
+                } else if (data.services && Array.isArray(data.services)) {
+                    services = data.services;
+                } else if (data.data && Array.isArray(data.data)) {
+                    services = data.data;
+                } else if (data.result && Array.isArray(data.result)) {
+                    services = data.result;
+                }
+
+                if (services && services.length > 0) {
+                    showApiAlert('✅ Connection successful! Found ' + services.length + ' services.', 'success');
+                    updateApiStatus(true);
+                } else {
+                    showApiAlert('⚠️ Connected but no services found. Check the response format.', 'info');
+                    updateApiStatus(true);
+                }
+
+            } catch (err) {
+                console.error('API test error:', err);
+                showApiAlert('❌ Connection failed: ' + err.message, 'error');
+                updateApiStatus(false);
+            }
+        }
+
+        function saveApiConfig() {
+            const config = {
+                url: document.getElementById('apiUrl').value.trim(),
+                key: document.getElementById('apiKey').value.trim(),
+                authMethod: document.getElementById('authMethod').value,
+                keyParam: document.getElementById('keyParamName').value || 'api_key',
+                method: document.getElementById('requestMethod').value,
+                headers: null,
+                priceMultiplier: parseFloat(document.getElementById('priceMultiplier').value) || 1.5,
+                markupPercent: parseInt(document.getElementById('markupPercent').value) || 50,
+                autoSyncInterval: parseInt(document.getElementById('autoSyncInterval').value) || 0,
+                lastSync: null
+            };
+
+            const extraHeadersStr = document.getElementById('extraHeaders').value.trim();
+            if (extraHeadersStr) {
+                try {
+                    config.headers = JSON.parse(extraHeadersStr);
+                } catch (e) {
+                    showApiAlert('Invalid extra headers JSON', 'error');
+                    return;
+                }
+            }
+
+            localStorage.setItem('upsocial_apiSettings', JSON.stringify(config));
+            apiConfig = config;
+
+            showApiAlert('✅ API configuration saved!', 'success');
+            document.getElementById('fetchServicesBtn').disabled = false;
+            updateApiStatus(true);
+        }
+
+        function clearApiConfig() {
+            if (!confirm('Clear all API configuration? This will not delete imported services.')) return;
+
+            localStorage.removeItem('upsocial_apiSettings');
+            apiConfig = {};
+
+            document.getElementById('apiUrl').value = '';
+            document.getElementById('apiKey').value = '';
+            document.getElementById('authMethod').value = 'query';
+            document.getElementById('keyParamName').value = 'api_key';
+            document.getElementById('requestMethod').value = 'GET';
+            document.getElementById('extraHeaders').value = '';
+            document.getElementById('fetchServicesBtn').disabled = true;
+
+            updateApiStatus(false);
+            showApiAlert('API configuration cleared', 'info');
+        }
+
+        async function fetchServices() {
+            if (!apiConfig.url) {
+                showApiAlert('Please save API configuration first', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('fetchServicesBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching...';
+
+            try {
+                let requestUrl = apiConfig.url;
+                let headers = {};
+                let body = null;
+
+                if (apiConfig.authMethod === 'query') {
+                    requestUrl += (requestUrl.includes('?') ? '&' : '?') + (apiConfig.keyParam || 'api_key') + '=' + encodeURIComponent(apiConfig.key);
+                } else if (apiConfig.authMethod === 'header') {
+                    headers['Authorization'] = 'Bearer ' + apiConfig.key;
+                } else if (apiConfig.authMethod === 'header-key') {
+                    headers[apiConfig.keyParam || 'X-API-Key'] = apiConfig.key;
+                }
+
+                if (apiConfig.headers) {
+                    headers = { ...headers, ...apiConfig.headers };
+                }
+
+                if (apiConfig.method === 'POST') {
+                    body = JSON.stringify({ [apiConfig.keyParam]: apiConfig.key });
+                    headers['Content-Type'] = 'application/json';
+                }
+
+                const response = await fetch(requestUrl, {
+                    method: apiConfig.method || 'GET',
+                    headers: headers,
+                    mode: 'cors',
+                    ...(body && { body })
+                });
+
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+
+                const data = await response.json();
+
+                // Extract services array
+                let services = null;
+                if (Array.isArray(data)) services = data;
+                else if (data.services && Array.isArray(data.services)) services = data.services;
+                else if (data.data && Array.isArray(data.data)) services = data.data;
+                else if (data.result && Array.isArray(data.result)) services = data.result;
+
+                if (!services || services.length === 0) {
+                    throw new Error('No services found in response');
+                }
+
+                fetchedServices = services.map((s, idx) => ({
+                    id: s.service || s.id || s._id || idx + 1,
+                    name: s.name || s.service_name || 'Unknown Service',
+                    category: s.category || s.type || 'General',
+                    rate: parseFloat(s.rate || s.price || s.cost_per_1000 || 0),
+                    min: parseInt(s.min || s.minimum || 10),
+                    max: parseInt(s.max || s.maximum || 100000),
+                    desc: s.desc || s.description || '',
+                    selected: true
+                }));
+
+                // Calculate pricing
+                const multiplier = parseFloat(document.getElementById('priceMultiplier').value) || 1.5;
+                const markup = parseInt(document.getElementById('markupPercent').value) || 50;
+
+                fetchedServices.forEach(s => {
+                    const basePrice = s.rate * multiplier;
+                    s.price = basePrice + (basePrice * markup / 100);
+                });
+
+                // Show stats
+                document.getElementById('statTotal').textContent = fetchedServices.length;
+                document.getElementById('statImported').textContent = fetchedServices.length;
+                document.getElementById('statUpdated').textContent = 0;
+                document.getElementById('statSkipped').textContent = 0;
+                document.getElementById('importStats').style.display = 'grid';
+
+                // Render preview
+                renderServicesPreview();
+                document.getElementById('servicesPreview').style.display = 'block';
+                document.getElementById('importActions').style.display = 'flex';
+
+                showApiAlert('✅ Found ' + fetchedServices.length + ' services! Review and import below.', 'success');
+
+            } catch (err) {
+                showApiAlert('❌ Failed to fetch: ' + err.message, 'error');
+                console.error('Fetch error:', err);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sync"></i> Fetch Services from API';
+            }
+        }
+
+        function renderServicesPreview() {
+            const tbody = document.getElementById('servicesPreviewBody');
+            tbody.innerHTML = fetchedServices.map((s, idx) => `
+                <tr>
+                    <td><input type="checkbox" class="service-select" data-index="${idx}" ${s.selected ? 'checked' : ''} onchange="toggleService(${idx})"></td>
+                    <td>${s.id}</td>
+                    <td><strong>${s.name}</strong><br><small style="color:#8892a8;">${s.desc.substring(0, 50)}${s.desc.length > 50 ? '...' : ''}</small></td>
+                    <td>${s.category}</td>
+                    <td>₦${s.price.toFixed(2)}</td>
+                    <td>${s.min}</td>
+                    <td>${s.max}</td>
+                </tr>
+            `).join('');
+        }
+
+        function toggleService(index) {
+            fetchedServices[index].selected = !fetchedServices[index].selected;
+            updateImportStats();
+        }
+
+        function toggleSelectAll() {
+            const checked = document.getElementById('selectAllServices').checked;
+            fetchedServices.forEach(s => s.selected = checked);
+            document.querySelectorAll('.service-select').forEach(cb => cb.checked = checked);
+            updateImportStats();
+        }
+
+        function updateImportStats() {
+            const selected = fetchedServices.filter(s => s.selected).length;
+            document.getElementById('statImported').textContent = selected;
+            document.getElementById('statSkipped').textContent = fetchedServices.length - selected;
+        }
+
+        function importSelectedServices() {
+            const selected = fetchedServices.filter(s => s.selected);
+            if (selected.length === 0) {
+                showApiAlert('No services selected for import', 'error');
+                return;
+            }
+
+            if (!confirm('Import ' + selected.length + ' services? This will overwrite existing services with the same ID.')) return;
+
+            // Get existing services
+            let existing = [];
+            const saved = localStorage.getItem('upsocial_services');
+            if (saved) existing = JSON.parse(saved);
+
+            // Merge: update existing, add new
+            let updated = 0;
+            let added = 0;
+
+            selected.forEach(newService => {
+                const existingIdx = existing.findIndex(e => e.id == newService.id);
+                if (existingIdx >= 0) {
+                    existing[existingIdx] = { ...newService, icon: getPlatformIcon(newService.category) };
+                    updated++;
+                } else {
+                    existing.push({ ...newService, icon: getPlatformIcon(newService.category) });
+                    added++;
+                }
+            });
+
+            localStorage.setItem('upsocial_services', JSON.stringify(existing));
+
+            // Update config
+            apiConfig.lastSync = new Date().toISOString();
+            localStorage.setItem('upsocial_apiSettings', JSON.stringify(apiConfig));
+
+            document.getElementById('statUpdated').textContent = updated;
+            document.getElementById('statImported').textContent = added;
+
+            showApiAlert('✅ Imported ' + added + ' new, updated ' + updated + ' services!', 'success');
+
+            setTimeout(() => {
+                document.getElementById('servicesPreview').style.display = 'none';
+                document.getElementById('importActions').style.display = 'none';
+                document.getElementById('importStats').style.display = 'none';
+                fetchedServices = [];
+            }, 3000);
+        }
+
+        function getPlatformIcon(category) {
+            const cat = (category || '').toLowerCase();
+            if (cat.includes('instagram')) return '<i class="fab fa-instagram"></i>';
+            if (cat.includes('tiktok')) return '<i class="fab fa-tiktok"></i>';
+            if (cat.includes('youtube')) return '<i class="fab fa-youtube"></i>';
+            if (cat.includes('twitter') || cat.includes('x')) return '<i class="fab fa-x-twitter"></i>';
+            if (cat.includes('facebook')) return '<i class="fab fa-facebook-f"></i>';
+            if (cat.includes('telegram')) return '<i class="fab fa-telegram"></i>';
+            if (cat.includes('spotify')) return '<i class="fab fa-spotify"></i>';
+            if (cat.includes('soundcloud')) return '<i class="fab fa-soundcloud"></i>';
+            if (cat.includes('linkedin')) return '<i class="fab fa-linkedin-in"></i>';
+            if (cat.includes('twitch')) return '<i class="fab fa-twitch"></i>';
+            if (cat.includes('discord')) return '<i class="fab fa-discord"></i>';
+            if (cat.includes('thread')) return '<i class="fab fa-threads"></i>';
+            return '<i class="fas fa-star"></i>';
+        }
+
+        function cancelImport() {
+            document.getElementById('servicesPreview').style.display = 'none';
+            document.getElementById('importActions').style.display = 'none';
+            document.getElementById('importStats').style.display = 'none';
+            fetchedServices = [];
+            showApiAlert('Import cancelled', 'info');
+        }
+
+        // ========== PAYMENT SETTINGS FUNCTIONS ==========
+
+        function loadPaymentSettings() {
+            const saved = localStorage.getItem('upsocial_paymentSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+
+                // Korapay
+                if (settings.korapay) {
+                    document.getElementById('korapayPublicKey').value = settings.korapay.publicKey || '';
+                    document.getElementById('korapaySecretKey').value = settings.korapay.secretKey || '';
+                    document.getElementById('korapayEnv').value = settings.korapay.environment || 'test';
+                    document.getElementById('korapayWebhookSecret').value = settings.korapay.webhookSecret || '';
+                    if (settings.korapay.enabled) {
+                        document.getElementById('korapayToggle').classList.add('active');
+                        document.getElementById('korapayToggleLabel').textContent = 'Enabled';
+                        document.getElementById('korapayConfig').classList.add('active');
+                    }
+                }
+
+                // Bank transfer
+                if (settings.bankTransfer) {
+                    document.getElementById('bankName').value = settings.bankTransfer.bankName || '';
+                    document.getElementById('bankAccount').value = settings.bankTransfer.accountNumber || '';
+                    document.getElementById('bankAccountName').value = settings.bankTransfer.accountName || '';
+                    document.getElementById('bankMinDeposit').value = settings.bankTransfer.minDeposit || 500;
+                    document.getElementById('bankInstructions').value = settings.bankTransfer.instructions || '';
+                    if (settings.bankTransfer.enabled) {
+                        document.getElementById('bankToggle').classList.add('active');
+                        document.getElementById('bankToggleLabel').textContent = 'Enabled';
+                        document.getElementById('bankConfig').classList.add('active');
+                    }
+                }
+
+                // Rules
+                if (settings.rules) {
+                    document.getElementById('minDeposit').value = settings.rules.minDeposit || 100;
+                    document.getElementById('maxDeposit').value = settings.rules.maxDeposit || 500000;
+                    document.getElementById('depositFee').value = settings.rules.depositFee || 0;
+                    document.getElementById('currencySymbol').value = settings.rules.currencySymbol || '₦';
+                    document.getElementById('autoApproveLimit').value = settings.rules.autoApproveLimit || 10000;
+                    document.getElementById('kycLimit').value = settings.rules.kycLimit || 50000;
+                }
+            }
+        }
+
+        function toggleGateway(gateway) {
+            const toggle = document.getElementById(gateway + 'Toggle');
+            const label = document.getElementById(gateway + 'ToggleLabel');
+            const config = document.getElementById(gateway + 'Config');
+
+            if (gateway === 'crypto') return; // Coming soon
+
+            toggle.classList.toggle('active');
+            const isActive = toggle.classList.contains('active');
+            label.textContent = isActive ? 'Enabled' : 'Disabled';
+
+            if (config) {
+                config.classList.toggle('active', isActive);
+            }
+        }
+
+        async function testKorapayConfig() {
+            const publicKey = document.getElementById('korapayPublicKey').value.trim();
+            const secretKey = document.getElementById('korapaySecretKey').value.trim();
+
+            if (!publicKey || !secretKey) {
+                showPaymentAlert('Please enter both Public and Secret keys', 'error');
+                return;
+            }
+
+            showPaymentAlert('Testing Korapay configuration...', 'info');
+
+            try {
+                // Test by making a request to Korapay's API
+                const response = await fetch('https://api.korapay.com/merchant/api/v1/charges', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + secretKey
+                    }
+                });
+
+                if (response.status === 401) {
+                    showPaymentAlert('❌ Invalid Secret Key. Please check your credentials.', 'error');
+                } else if (response.ok || response.status === 400) {
+                    // 400 means auth worked but request was bad (no body) - that's good for testing
+                    showPaymentAlert('✅ Korapay configuration is valid!', 'success');
+                } else {
+                    showPaymentAlert('⚠️ Unexpected response: ' + response.status, 'info');
+                }
+            } catch (err) {
+                showPaymentAlert('❌ Connection failed: ' + err.message, 'error');
+            }
+        }
+
+        function savePaymentSettings() {
+            const settings = {
+                korapay: {
+                    enabled: document.getElementById('korapayToggle').classList.contains('active'),
+                    publicKey: document.getElementById('korapayPublicKey').value.trim(),
+                    secretKey: document.getElementById('korapaySecretKey').value.trim(),
+                    environment: document.getElementById('korapayEnv').value,
+                    webhookSecret: document.getElementById('korapayWebhookSecret').value.trim()
+                },
+                bankTransfer: {
+                    enabled: document.getElementById('bankToggle').classList.contains('active'),
+                    bankName: document.getElementById('bankName').value.trim(),
+                    accountNumber: document.getElementById('bankAccount').value.trim(),
+                    accountName: document.getElementById('bankAccountName').value.trim(),
+                    minDeposit: parseInt(document.getElementById('bankMinDeposit').value) || 500,
+                    instructions: document.getElementById('bankInstructions').value.trim()
+                },
+                crypto: {
+                    enabled: false
+                },
+                rules: {
+                    minDeposit: parseInt(document.getElementById('minDeposit').value) || 100,
+                    maxDeposit: parseInt(document.getElementById('maxDeposit').value) || 500000,
+                    depositFee: parseFloat(document.getElementById('depositFee').value) || 0,
+                    currencySymbol: document.getElementById('currencySymbol').value || '₦',
+                    autoApproveLimit: parseInt(document.getElementById('autoApproveLimit').value) || 10000,
+                    kycLimit: parseInt(document.getElementById('kycLimit').value) || 50000
+                }
+            };
+
+            localStorage.setItem('upsocial_paymentSettings', JSON.stringify(settings));
+            showPaymentAlert('✅ Payment settings saved successfully!', 'success');
+        }
+
+</script>
 </body>
-</html>
+                            </html>
